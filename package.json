@@ -1,0 +1,31 @@
+{
+  "name": "app-platform-be",
+  "version": "1.0.0",
+  "description": "app platform backend",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:dev": "ts-node src/index.ts",
+    "test": "npm run mocha --recursive ./src/**/__tests__/*",
+    "mocha": "mocha -r ts-node/register"
+  },
+  "devDependencies": {
+    "@types/chai": "4.0.4",
+    "@types/mocha": "2.2.43",
+    "chai": "4.1.2",
+    "mocha": "3.5.3",
+    "ts-node": "^8.4.1",
+    "typescript": "2.5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meitix/app-platform-be.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meitix/app-platform-be/issues"
+  },
+  "homepage": "https://github.com/meitix/app-platform-be#readme"
+}
