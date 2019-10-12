@@ -1,7 +1,7 @@
-import { IUser } from "./user.interface";
+import { IUser } from './user.interface';
 
 export interface IToken {
-    user: IUser;
+  user: IUser;
   type: TokenType;
   value: string;
 }

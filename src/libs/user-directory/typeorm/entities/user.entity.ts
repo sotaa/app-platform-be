@@ -1,9 +1,8 @@
 import { IEntity } from './interfaces/entity.interface';
-import { IUser } from '../../interfaces/user.interface';
-import { IToken } from '../../interfaces/token.interface';
 import { Invoice } from './invoice.entity';
 import { PrimaryGeneratedColumn, Column, Index, ManyToOne } from 'typeorm';
 import { Token } from './token.entity';
+import { IUser } from '../../interfaces/models/user.interface';
 
 export class User implements IEntity, IUser {
   @PrimaryGeneratedColumn()
@@ -20,7 +19,7 @@ export class User implements IEntity, IUser {
   @Column()
   mobile: string;
   @ManyToOne(type => Token, token => token.user)
-  tokens: IToken[];
+  tokens: Token[];
   @Column()
   expireDate?: Date;
   @Column()

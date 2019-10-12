@@ -33,6 +33,7 @@
   "homepage": "https://github.com/meitix/app-platform-be#readme",
   "dependencies": {
     "reflect-metadata": "^0.1.13",
+    "tsoa": "^2.5.6",
     "typeorm": "^0.2.19"
   }
 }
