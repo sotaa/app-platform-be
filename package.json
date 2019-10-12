@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "app platform backend",
   "main": "dist/index.js",
+  "prettier": {
+    "singleQuote": true
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
