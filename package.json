@@ -33,6 +33,7 @@
   "homepage": "https://github.com/meitix/app-platform-be#readme",
   "dependencies": {
     "reflect-metadata": "^0.1.13",
+    "swagger-ui-express": "^4.1.2",
     "tsoa": "^2.5.6",
     "typeorm": "^0.2.19"
   }
