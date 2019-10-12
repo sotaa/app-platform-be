@@ -2,7 +2,7 @@ import { IEntity } from './interfaces/entity.interface';
 import { PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { User } from './user.entity';
 import { PaymentPlan } from './payment-plan.entity';
-import { IInvoice } from '../../interfaces/models/invoice.interface.log';
+import { IInvoice } from '../../interfaces/models/invoice.interface';
 
 export class Invoice implements IEntity, IInvoice {
   @PrimaryGeneratedColumn()
