@@ -1,0 +1,157 @@
+{
+	"basePath": "/",
+	"consumes": [
+		"application/json"
+	],
+	"definitions": {
+		"IPaymentPlan": {
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"price": {
+					"type": "number",
+					"format": "double"
+				},
+				"dateRange": {
+					"type": "number",
+					"format": "double"
+				},
+				"isActive": {
+					"type": "boolean"
+				},
+				"description": {
+					"type": "string",
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"name",
+				"price",
+				"dateRange",
+				"isActive"
+			],
+			"type": "object",
+			"additionalProperties": true
+		}
+	},
+	"info": {
+		"title": "app-platform-be",
+		"version": "1.0.0",
+		"description": "app platform backend",
+		"license": {
+			"name": "ISC"
+		}
+	},
+	"paths": {
+		"/payment-plans": {
+			"get": {
+				"operationId": "List",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"items": {
+								"$ref": "#/definitions/IPaymentPlan"
+							},
+							"type": "array"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"type": "string"
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IPaymentPlan"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "plan",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/IPaymentPlan"
+						}
+					}
+				]
+			}
+		},
+		"/payment-plans/{id}": {
+			"get": {
+				"operationId": "Find",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IPaymentPlan"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "double",
+						"type": "number"
+					}
+				]
+			},
+			"delete": {
+				"operationId": "Delete",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"additionalProperties": true,
+							"type": "object"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "double",
+						"type": "number"
+					}
+				]
+			}
+		}
+	},
+	"produces": [
+		"application/json"
+	],
+	"swagger": "2.0",
+	"securityDefinitions": {}
+}

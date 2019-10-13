@@ -11,8 +11,8 @@ export abstract class CRUDService<T> implements ICRUDService<T> {
     return this.repository.save<T>(entity);
   }
 
-  update(condition: number | Partial<T>, entity: T) {
-    return this.repository.update(condition as unknown as FindConditions<T>, entity);
+  update(condition: number | object | Partial<T>, entity: T) {
+    return this.repository.update(condition as FindConditions<T>, entity);
   }
 
   delete(id: number | number[] | object | Partial<T>): Promise<DeleteResult> {
