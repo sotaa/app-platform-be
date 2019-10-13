@@ -1,9 +1,10 @@
 import { IEntity } from './interfaces/entity.interface';
-import { PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
+import { PrimaryGeneratedColumn, ManyToOne, Column, Entity } from 'typeorm';
 import { User } from './user.entity';
 import { PaymentPlan } from './payment-plan.entity';
 import { IInvoice } from '../../interfaces/models/invoice.interface';
 
+@Entity()
 export class Invoice implements IEntity, IInvoice {
   @PrimaryGeneratedColumn()
   id: number;

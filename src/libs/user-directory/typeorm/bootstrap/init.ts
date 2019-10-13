@@ -1,14 +1,22 @@
-import { createConnection, ConnectionOptions } from "typeorm";
+import { createConnection, ConnectionOptions } from 'typeorm';
+import  { Application, Invoice, PaymentPlan, Token, User } from "../entities";
 
-export function init(config: IConfiguration) {
-    createConnection(config as ConnectionOptions);
+export async function initialize(config: DBConfiguration) {
+ return await createConnection({
+    ...config,
+    logging: true,
+    entities: [Application, Invoice, PaymentPlan, Token, User],
+    migrations: ['../migration/**/*.ts'],
+    subscribers: ['../subscriber/**/*.ts']
+  } as ConnectionOptions);
 }
 
-export interface IConfiguration {
+export interface DBConfiguration {
   type: 'mysql' | 'mssql';
   host: string;
   port: number | string;
   username: string;
   password: string;
   database: string;
+  synchronize: boolean;
 }

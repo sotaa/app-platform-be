@@ -1,8 +1,9 @@
 import { IEntity } from './interfaces/entity.interface';
 import { Invoice } from './invoice.entity';
-import { OneToMany, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { OneToMany, PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 import { IPaymentPlan } from '../../interfaces/models/payment-plan.interface';
 
+@Entity()
 export class PaymentPlan implements IEntity, IPaymentPlan {
   @PrimaryGeneratedColumn()
   id: number;

@@ -6,7 +6,7 @@ import {
   PaymentPlanService,
   TokenService,
   UserService
-} from '../../services/user-directory.service';
+} from '../../services';
 
 import { PaymentPlanController } from '../../controllers';
 
@@ -18,6 +18,6 @@ iocContainer.bind(TYPES.IPaymentPlanService).to(PaymentPlanService);
 iocContainer.bind(TYPES.ITokenService).to(TokenService);
 iocContainer.bind(TYPES.IUserService).to(UserService);
 
-iocContainer.bind(PaymentPlanController).to(PaymentPlanController);
+iocContainer.bind(PaymentPlanController).toSelf();
 
 export { iocContainer, inject, injectable };
