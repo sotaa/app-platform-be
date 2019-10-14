@@ -4,7 +4,7 @@ import  { Application, Invoice, PaymentPlan, Token, User } from "../entities";
 export async function initialize(config: DBConfiguration) {
  return await createConnection({
     ...config,
-    logging: true,
+    logging: false,
     entities: [Application, Invoice, PaymentPlan, Token, User],
     migrations: ['../migration/**/*.ts'],
     subscribers: ['../subscriber/**/*.ts']

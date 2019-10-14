@@ -7,13 +7,14 @@ import * as swaggerUi from 'swagger-ui-express';
 import { DBConfiguration, initializeDatabase } from './services';
 
 export class UserDirectoryServer {
-  protected app: express.Express;
+  app: express.Express;
   constructor(protected log: Function) {
     this.app = express();
   }
 
   public async initialize(config: UserDirectoryConfiguration) {
     initializeDatabase(config.dbConfig);
+    this.app.use(express.json());
     RegisterRoutes(this.app);
   }
 

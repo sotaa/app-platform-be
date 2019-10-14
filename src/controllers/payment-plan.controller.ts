@@ -1,4 +1,4 @@
-import { Controller, Route, Get, Query , Request, Post, Body, Delete } from 'tsoa';
+import { Controller, Route, Get, Query , Request, Post, Body, Delete, SuccessResponse } from 'tsoa';
 import { IPaymentPlan, IPaymentPlanService, TYPES } from '../libs/user-directory/interfaces';
 import { inject, injectable } from 'inversify';
 
@@ -20,8 +20,10 @@ export class PaymentPlanController extends Controller {
   }
   
   @Post()
+  @SuccessResponse(201, 'Created')
   async create(@Body() plan: IPaymentPlan): Promise<IPaymentPlan> {
-    return this.paymentPlanService.create(plan);
+    console.log(plan);
+    return await this.paymentPlanService.create(plan);
   }
   
   @Delete('{id}')
