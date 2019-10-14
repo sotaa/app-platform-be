@@ -1,5 +1,5 @@
 import { UserDirectoryServer } from './user-directory.server';
-import { config as envConfig } from 'dotenv';
+import { config as envConfig } from 'dotenv-flow';
 
 envConfig();
 const env = process.env;
