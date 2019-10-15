@@ -37,7 +37,7 @@ export class UserDirectoryServer {
   }
 
   public start(port: string | number) {
-    this.app.listen(port, () => this.log(`server is started on port ${port}`));
+    this.app.listen(port, () => this.log(`User Directory is started on port ${port}`));
   }
 }
 
