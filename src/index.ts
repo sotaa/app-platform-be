@@ -5,7 +5,7 @@ envConfig();
 const env = process.env;
 
 const config = {
-  mode: env.NODE_ENV,
+  mode: env.NODE_ENV || 'dev',
   port: env.PORT,
   dbConfig: {
     type: env.DB_TYPE as 'mysql' | 'mssql',
@@ -18,7 +18,7 @@ const config = {
   }
 };
 
-console.log('userDirectory started with the following configurations:', config);
+console.log('userDirectory is using the following configurations:', config);
 
 const userDirectory = new UserDirectoryServer(console.log);
 
@@ -27,6 +27,10 @@ if (config.mode !== 'prod' && config.mode !== 'production') {
 }
 
 userDirectory.initialize(config);
+
+if (config.mode === 'test') {
+  userDirectory.clean();
+}
 
 userDirectory.start(config.port || 3000);
 
