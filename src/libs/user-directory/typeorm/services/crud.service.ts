@@ -3,8 +3,8 @@ import { Repository , FindConditions, DeleteResult } from 'typeorm';
 
 export abstract class CRUDService<T> implements ICRUDService<T> {
   constructor(protected repository: Repository<T>) {}
-  create(entity: T): T {
-    return this.repository.create(entity);
+  create(entity: T): Promise<T> {
+    return this.repository.save(entity);
   }
 
   save(entity: T): Promise<T>{
