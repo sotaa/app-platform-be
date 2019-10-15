@@ -25,7 +25,6 @@ describe('Payment-Plans', () => {
         .request(userDirectory)
         .get('/payment-plans')
         .then(res => {
-         
           res.should.have.status(200);
           expect(res.body).to.instanceOf(Array);
         });
@@ -49,7 +48,7 @@ describe('Payment-Plans', () => {
   });
 
   describe('GET: /payment-plans/{id}', () => {
-    it('Should return object with id '+ id, () => {
+    it('Should return object with id ' + id, () => {
       return chai
         .request(userDirectory)
         .get('/payment-plans/' + id)
@@ -81,7 +80,7 @@ describe('Payment-Plans', () => {
               const NEW_NAME = 'new name';
               return chai
                 .request(userDirectory)
-                .put('/payment-plans/'+ id)
+                .put('/payment-plans/' + id)
                 .send(Object.assign(data, { name: NEW_NAME }))
                 .then(res => {
                   expect(res).have.status(200);
@@ -99,26 +98,28 @@ describe('Payment-Plans', () => {
   });
 
   describe('DELETE: /payment-plans/{id}', () => {
-      it('Should delete payment plan', () => {
-        return chai
+    it('Should delete payment plan', () => {
+      return chai
         .request(userDirectory)
         .post('/payment-plans')
         .send(sample)
         .then(res => {
-            expect(res).have.status(200);
-            expect(res.body).has.property('id');
+          expect(res).have.status(200);
+          expect(res.body).has.property('id');
 
-            console.log(res.body.id)
-            return chai.request(userDirectory).delete('/payment-plans/'+res.body.id).then(res => {
-                expect(res).have.status(200);
-                return  chai
+          return chai
+            .request(userDirectory)
+            .delete('/payment-plans/' + res.body.id)
+            .then(res => {
+              expect(res).have.status(200);
+              return chai
                 .request(userDirectory)
                 .get('/payment-plans/' + res.body.id)
                 .then(res => {
                   expect(res).have.status(400);
                 });
-            })
+            });
         });
-      });
+    });
   });
 });
