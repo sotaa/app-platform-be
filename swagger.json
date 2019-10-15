@@ -32,7 +32,7 @@
 				"isActive"
 			],
 			"type": "object",
-			"additionalProperties": true
+			"additionalProperties": false
 		}
 	},
 	"info": {
@@ -119,6 +119,39 @@
 						"required": true,
 						"format": "double",
 						"type": "number"
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"additionalProperties": true,
+							"type": "object"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "double",
+						"type": "number"
+					},
+					{
+						"in": "body",
+						"name": "plan",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/IPaymentPlan"
+						}
 					}
 				]
 			},
