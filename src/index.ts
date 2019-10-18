@@ -1,40 +1,59 @@
+/**
+ * Node.js entry point for launching the server.
+ * This file should contain all required configuration for running application.
+ */
+
 import { UserDirectoryServer } from './user-directory.server';
 import { config as envConfig } from 'dotenv-flow';
+import { applicationLogger, requestLogger } from './logger/winston';
+
+const appLogger = applicationLogger;
 
 envConfig();
-const env = process.env;
+const config = extractConfig(process.env);
+appLogger.info('userDirectory is using the following configurations:', config);
 
-const config = {
-  mode: env.NODE_ENV || 'dev',
-  port: env.PORT,
-  dbConfig: {
-    type: env.DB_TYPE as 'mysql' | 'mssql',
-    host: env.DB_HOST,
-    database: env.DB_NAME,
-    port: env.DB_PORT,
-    username: env.DB_USER,
-    password: env.DB_PASSWORD,
-    synchronize: eval(env.DB_SYNC)
-  }
-};
+const userDirectory = new UserDirectoryServer({dbConfig: config.dbConfig, logger: appLogger as any});
 
-console.log('userDirectory is using the following configurations:', config);
-
-const userDirectory = new UserDirectoryServer(console.log);
-
+/**
+ * Enable documentation on /docs route in development mode.
+ * Also we will log all incoming requests and outgoing responses on production server.
+ */
 if (config.mode !== 'prod' && config.mode !== 'production') {
   userDirectory.enableDocumentation('/docs');
+} else {
+  userDirectory.enableRequestLogging(requestLogger as any);
 }
 
-userDirectory.initialize(config);
-
+/** Cleaning application for testing */
 if (config.mode === 'test') {
   userDirectory.clean();
 }
 
+/** Start the server */
 userDirectory.start(config.port || 3000);
 
 /**
  * We need to export the app for testing purposes.
  */
 export default userDirectory.app;
+
+/**
+ * extract environment variables and return it as an object.
+ * @param env process.env
+ */
+function extractConfig(env: any) {
+  return {
+    mode: env.NODE_ENV || 'dev',
+    port: env.PORT,
+    dbConfig: {
+      type: env.DB_TYPE as 'mysql' | 'mssql',
+      host: env.DB_HOST,
+      database: env.DB_NAME,
+      port: env.DB_PORT,
+      username: env.DB_USER,
+      password: env.DB_PASSWORD,
+      synchronize: eval(env.DB_SYNC)
+    }
+  };
+}

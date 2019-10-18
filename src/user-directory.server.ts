@@ -5,17 +5,28 @@ import * as express from 'express';
 import { RegisterRoutes } from './routes/routes';
 import * as swaggerUi from 'swagger-ui-express';
 import { DBConfiguration, initializeDatabase, clean } from './services';
+import { ILogger } from './logger';
+import { logMiddleware } from './middlewares';
 
 export class UserDirectoryServer {
   app: express.Express;
-  constructor(protected log: Function) {
+  protected logger: ILogger;
+  
+  constructor(protected config: UserDirectoryConfiguration) {
+    this.logger = config.logger || console.log as any;
     this.app = express();
   }
 
-  public async initialize(config: UserDirectoryConfiguration) {
-    initializeDatabase(config.dbConfig);
+  private async initialize() {
     this.app.use(express.json());
     RegisterRoutes(this.app);
+  }
+  
+  /**
+   * Log all incoming requests and outgoing response.
+   */
+  public enableRequestLogging(logger?: ILogger) {
+    this.app.use(logMiddleware(logger || this.logger));
   }
 
   /**
@@ -32,16 +43,19 @@ export class UserDirectoryServer {
       const swaggerDocument = require('../swagger.json');
       this.app.use(url, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     } catch (err) {
-      this.log('Unable to load swagger.json', err);
+      this.logger.error('Unable to load swagger.json', err);
     }
   }
 
   public start(port: string | number) {
-    this.app.listen(port, () => this.log(`User Directory is started on port ${port}`));
+    this.initialize();
+    initializeDatabase(this.config.dbConfig);
+    this.app.listen(port, () => this.logger.info(`User Directory is started on port ${port}`));
   }
 }
 
 
 export interface UserDirectoryConfiguration {
+  logger?: ILogger;
   dbConfig: DBConfiguration;
 }
