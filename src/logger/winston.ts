@@ -1,6 +1,5 @@
 import { createLogger, format, transports, Container } from 'winston';
 
-const container = new Container();
 const commonConfiguration = {
   level: 'info',
   format: format.combine(
