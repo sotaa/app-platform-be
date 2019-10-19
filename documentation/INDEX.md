@@ -1,5 +1,3 @@
-#Node.js User Directory API
-This application provide a user directory API which allows user to register, login and buy a premium plan.
 
 ##Quick Start
 ####Install Dependencies
