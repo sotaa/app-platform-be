@@ -19,6 +19,7 @@ export class UserDirectoryServer {
 
   private async initialize() {
     this.app.use(express.json());
+    this.handleUncaughtExceptions();
     RegisterRoutes(this.app);
   }
   
@@ -45,6 +46,12 @@ export class UserDirectoryServer {
     } catch (err) {
       this.logger.error('Unable to load swagger.json', err);
     }
+  }
+
+  private handleUncaughtExceptions() {
+    process.on('unhandledRejection' , this.logger.error );
+    process.on('uncaughtException' , this.logger.error);
+    process.on('warning', this.logger.warn)
   }
 
   public start(port: string | number) {

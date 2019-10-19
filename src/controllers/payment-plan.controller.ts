@@ -1,10 +1,10 @@
-import { Controller, Route, Get, Query , Request, Post, Body, Delete, SuccessResponse, Put } from 'tsoa';
+import { Controller, Route, Get, Query , Post, Body, Delete, SuccessResponse, Put } from 'tsoa';
 import { IPaymentPlan, IPaymentPlanService, TYPES } from '../libs/user-directory/interfaces';
 import { inject, injectable } from 'inversify';
 
 @Route('payment-plans')
 @injectable()
-export class PaymentPlanController extends Controller {
+export class PaymentPlansController extends Controller {
   constructor(@inject(TYPES.IPaymentPlanService) private paymentPlanService: IPaymentPlanService) {
       super();
   }

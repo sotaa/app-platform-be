@@ -25,7 +25,6 @@ if (config.mode !== 'prod' && config.mode !== 'production') {
   userDirectory.enableRequestLogging(requestLogger as any);
 }
 
-
 /** Start the server */
 userDirectory.start(config.port || 3000);
 
