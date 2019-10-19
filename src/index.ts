@@ -25,13 +25,14 @@ if (config.mode !== 'prod' && config.mode !== 'production') {
   userDirectory.enableRequestLogging(requestLogger as any);
 }
 
+
+/** Start the server */
+userDirectory.start(config.port || 3000);
+
 /** Cleaning application for testing */
 if (config.mode === 'test') {
   userDirectory.clean();
 }
-
-/** Start the server */
-userDirectory.start(config.port || 3000);
 
 /**
  * We need to export the app for testing purposes.
