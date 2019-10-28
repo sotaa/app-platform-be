@@ -7,7 +7,7 @@ import { IInvoice } from '../../interfaces/models/invoice.interface';
 @Entity()
 export class Invoice implements IEntity, IInvoice {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
   @ManyToOne(type => User, user => user.invoices)
   user: User;
   @ManyToOne(type => PaymentPlan, pp => pp.invoices)

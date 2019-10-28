@@ -49,9 +49,9 @@ export class UserDirectoryServer {
   }
 
   private handleUncaughtExceptions() {
-    process.on('unhandledRejection' , this.logger.error );
-    process.on('uncaughtException' , this.logger.error);
-    process.on('warning', this.logger.warn)
+    process.on('unhandledRejection' , this.logger.error.bind(this) );
+    process.on('uncaughtException' , this.logger.error.bind(this));
+    process.on('warning', this.logger.warn.bind(this))
   }
 
   public start(port: string | number) {

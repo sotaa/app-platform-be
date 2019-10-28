@@ -2,6 +2,7 @@ export const TYPES = {
     IApplicationService: Symbol('IApplicationService'),
     IInvoiceService: Symbol('IInvoiceService'),
     IPaymentPlanService: Symbol('IPaymentPlanService'),
-    ITokenService: Symbol('ITokenService'),
-    IUserService: Symbol('IUserService')
+    IUserService: Symbol('IUserService'),
+    IAuthService: Symbol('IAuthService'),
+    IIdentityConfig: Symbol('IIdentityConfig')
 }

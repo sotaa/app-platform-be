@@ -4,21 +4,26 @@ import {
   ApplicationService,
   InvoiceService,
   PaymentPlanService,
-  TokenService,
   UserService
 } from '../../services';
 
-import { PaymentPlansController, ApplicationController } from '../../controllers';
-
+import { PaymentPlansController, ApplicationController, AuthController } from '../../controllers';
+import { UserController } from '../../controllers/user.controller';
+import { AuthService } from '../../services/auth.service';
+const identityConfig = require('../../config/identity.config.json');
 const iocContainer = new Container({skipBaseClassChecks: true});
 
 iocContainer.bind(TYPES.IApplicationService).to(ApplicationService).inSingletonScope();
 iocContainer.bind(TYPES.IInvoiceService).to(InvoiceService).inSingletonScope();
 iocContainer.bind(TYPES.IPaymentPlanService).to(PaymentPlanService).inSingletonScope();
-iocContainer.bind(TYPES.ITokenService).to(TokenService).inSingletonScope();
+iocContainer.bind(TYPES.IAuthService).to(AuthService).inSingletonScope();
+iocContainer.bind(TYPES.IIdentityConfig).toConstantValue({tokenLife: identityConfig.tokenLifeTime, secretKey: identityConfig.secretKey});
 iocContainer.bind(TYPES.IUserService).to(UserService).inSingletonScope();
+
 
 iocContainer.bind(PaymentPlansController).toSelf().inSingletonScope();
 iocContainer.bind(ApplicationController).toSelf().inSingletonScope();
+iocContainer.bind(UserController).toSelf().inSingletonScope();
+iocContainer.bind(AuthController).toSelf().inSingletonScope();
 
 export { iocContainer, inject, injectable };

@@ -1,3 +1,4 @@
+
 export interface ICRUDService<T> {
     create(entity: T) : T | Promise<T>;
     save(entity: T): T | Promise<T>;

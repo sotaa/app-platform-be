@@ -5,7 +5,7 @@ import { IApplication } from '../../interfaces/models/application.interface';
 @Entity()
 export class Application implements IEntity, IApplication {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
   @Column()
   name: string;
   @Column()

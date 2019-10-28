@@ -1,11 +1,12 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
-import  { Application, Invoice, PaymentPlan, Token, User } from "../entities";
+import  { Application, Invoice, PaymentPlan, User, Token } from "../entities";
+import { IdentityUser } from '../../../identity/typeorm/entities';
 
 export async function initialize(config: DBConfiguration) {
  return await createConnection({
     ...config,
     logging: false,
-    entities: [Application, Invoice, PaymentPlan, Token, User],
+    entities: [Application, Invoice, PaymentPlan, Token, User, IdentityUser],
     migrations: ['../migration/**/*.ts'],
     subscribers: ['../subscriber/**/*.ts']
   } as ConnectionOptions);

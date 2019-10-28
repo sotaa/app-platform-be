@@ -1,0 +1,4 @@
+{
+  "tokenLifeTime": 3600,
+  "secretKey": "secret_key"
+}

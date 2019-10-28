@@ -53,6 +53,89 @@
 			],
 			"type": "object",
 			"additionalProperties": false
+		},
+		"IUser": {
+			"properties": {
+				"firstName": {
+					"type": "string",
+					"x-nullable": true
+				},
+				"lastName": {
+					"type": "string",
+					"x-nullable": true
+				},
+				"sex": {
+					"type": "string",
+					"enum": [
+						"male",
+						"female"
+					],
+					"x-nullable": true
+				},
+				"mobile": {
+					"type": "string",
+					"x-nullable": true
+				},
+				"expireDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				},
+				"registerDate": {
+					"type": "string",
+					"format": "date-time"
+				}
+			},
+			"required": [
+				"registerDate"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"IAuthResult": {
+			"properties": {
+				"user": {
+					"additionalProperties": true,
+					"type": "object"
+				},
+				"token": {
+					"type": "string",
+					"description": "Access token which should be used for authorization"
+				},
+				"refreshToken": {
+					"type": "string",
+					"description": "Use for refreshing the token after expire time."
+				},
+				"expiresIn": {
+					"type": "number",
+					"format": "double",
+					"description": "Seconds remaining for expiring the token."
+				}
+			},
+			"required": [
+				"user",
+				"token",
+				"refreshToken",
+				"expiresIn"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"IAuthData": {
+			"properties": {
+				"username": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				}
+			},
+			"required": [
+				"username",
+				"password"
+			],
+			"type": "object",
+			"additionalProperties": false
 		}
 	},
 	"info": {
@@ -334,6 +417,257 @@
 						"required": true,
 						"format": "double",
 						"type": "number"
+					}
+				]
+			}
+		},
+		"/users": {
+			"get": {
+				"operationId": "List",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"items": {
+								"$ref": "#/definitions/IUser"
+							},
+							"type": "array"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "filter",
+						"required": false,
+						"type": "string"
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IUser"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/IUser"
+						}
+					}
+				]
+			}
+		},
+		"/users/{id}": {
+			"get": {
+				"operationId": "Find",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IUser"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "double",
+						"type": "number"
+					}
+				]
+			},
+			"put": {
+				"operationId": "Update",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"additionalProperties": true,
+							"type": "object"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "double",
+						"type": "number"
+					},
+					{
+						"in": "body",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/IUser"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "Delete",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"additionalProperties": true,
+							"type": "object"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"format": "double",
+						"type": "number"
+					}
+				]
+			}
+		},
+		"/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IAuthResult"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "authData",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/IAuthData"
+						}
+					}
+				]
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IAuthResult"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "authData",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/IAuthData"
+						}
+					}
+				]
+			}
+		},
+		"/auth/reset-password": {
+			"post": {
+				"operationId": "ResetPassword",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"type": "boolean"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"schema": {
+							"properties": {
+								"username": {
+									"type": "string"
+								}
+							},
+							"title": "ResetPasswordBody",
+							"type": "object",
+							"required": [
+								"username"
+							]
+						}
+					}
+				]
+			}
+		},
+		"/auth/token/{refreshToken}": {
+			"get": {
+				"operationId": "RenewToken",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IAuthResult"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "refreshToken",
+						"required": true,
+						"type": "string"
 					}
 				]
 			}

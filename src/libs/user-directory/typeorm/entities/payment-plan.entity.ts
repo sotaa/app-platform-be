@@ -6,7 +6,7 @@ import { IPaymentPlan } from '../../interfaces/models/payment-plan.interface';
 @Entity()
 export class PaymentPlan implements IEntity, IPaymentPlan {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
   @Column()
   name: string;
   @Column()

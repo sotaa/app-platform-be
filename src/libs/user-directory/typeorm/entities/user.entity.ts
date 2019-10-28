@@ -1,30 +1,26 @@
-import { IEntity } from './interfaces/entity.interface';
 import { Invoice } from './invoice.entity';
-import { PrimaryGeneratedColumn, Column, Index, ManyToOne, Entity, OneToMany } from 'typeorm';
-import { Token } from './token.entity';
+import { Column, Index, OneToMany, ChildEntity } from 'typeorm';
 import { IUser } from '../../interfaces/models/user.interface';
+import {IsEmail, } from 'class-validator';
+import { IdentityUser } from '../../../identity/typeorm/entities';
 
-@Entity()
-export class User implements IEntity, IUser {
-  @PrimaryGeneratedColumn()
-  id: number;
-  @Column()
-  name: string;
+@ChildEntity()
+export class User extends IdentityUser implements IUser {
+  @Column({nullable: true})
+  firstName: string; 
+  @Column({nullable: true})
+  lastName: string;
   @Index()
   @Column()
-  email: string;
+  @IsEmail()
+  username: string;
   @Index()
-  @Column()
-  password: string;
-  @Index()
-  @Column()
+  @Column({nullable: true})
   mobile: string;
-  @OneToMany(type => Token, token => token.user)
-  tokens: Token[];
-  @Column()
+  @Column({nullable: true})
   expireDate?: Date;
-  @Column()
-  registerDate: Date;
-  @OneToMany(type => Invoice, invoice => invoice.user)
+  @Column({default: () => 'CURRENT_TIMESTAMP'})
+  readonly registerDate: Date;
+  @OneToMany(() => Invoice, invoice => invoice.user)
   invoices: Invoice[];
 }

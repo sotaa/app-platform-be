@@ -1,11 +1,10 @@
-import { IToken } from './token.interface';
+import { IToken } from '../../../identity/interfaces/models/token.interface';
 
 export interface IUser {
-  name: string;
-  email: string;
-  password: string;
-  mobile: string;
-  tokens: IToken[];
+  firstName?: string;
+  lastName?: string;
+  sex?: 'male' | 'female';
+  mobile?: string;
   expireDate?: Date;
   registerDate: Date;
 }

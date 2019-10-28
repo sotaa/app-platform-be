@@ -9,6 +9,4 @@ export class InvoiceService extends Typeorm.InvoiceService {}
 @injectable()
 export class PaymentPlanService extends Typeorm.PaymentPlanService {}
 @injectable()
-export class TokenService extends Typeorm.TokenService {}
-@injectable()
 export class UserService extends Typeorm.UserService {}

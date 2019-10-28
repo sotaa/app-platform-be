@@ -8,6 +8,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "moduleResolution": "node",
+        "allowUnreachableCode": true,
         "types": ["reflect-metadata"]
     },
     "include": [

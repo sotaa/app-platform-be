@@ -7,7 +7,7 @@ import { UserDirectoryServer } from './user-directory.server';
 import { config as envConfig } from 'dotenv-flow';
 import { applicationLogger, requestLogger } from './logger/winston';
 
-const appLogger = applicationLogger;
+const appLogger = console;// applicationLogger;
 
 envConfig();
 const config = extractConfig(process.env);
