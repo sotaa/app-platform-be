@@ -8,7 +8,9 @@ import { IEntity } from '../interfaces';
 export class Token implements IEntity, IToken {
   @PrimaryGeneratedColumn()
   id?: string;
-  @ManyToOne(type => IdentityUser, user => user.tokens)
+  @Column()
+  userId: number;
+  @ManyToOne(type => IdentityUser, user => user.tokens , {nullable: false})
   user: IIdentityUser;
   @Column()
   type: TokenType;
