@@ -1,4 +1,5 @@
 import { IToken } from '../../../identity/interfaces/models/token.interface';
+import { IInvoice } from './invoice.interface';
 
 export interface IUser {
   firstName?: string;
@@ -7,4 +8,5 @@ export interface IUser {
   mobile?: string;
   expireDate?: Date;
   registerDate: Date;
+  invoices: IInvoice[];
 }
