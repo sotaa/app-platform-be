@@ -14,5 +14,5 @@ export abstract class IdentityUser implements IEntity, IIdentityUser {
   @Column()
   password: string;
   @OneToMany(type => Token, token => token.user, {cascade: ['insert', 'remove', 'update']})
-  tokens: IToken[] = [];
+  tokens: IToken[];
 }
