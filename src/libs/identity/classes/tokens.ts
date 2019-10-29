@@ -1,21 +1,17 @@
 import { IToken, IIdentityUser, TokenType } from '../interfaces';
-import { Token } from '../typeorm/entities';
 
+export class Token implements IToken{
+  constructor(public type: TokenType, public value: string, public user: IIdentityUser) {}
+}
 
 export class AccessToken extends Token {
   constructor(value: string, user: IIdentityUser) {
-    super();
-    this.type = TokenType.access;
-    this.value = value;
-    this.user = user;
+    super(TokenType.access, value, user);
   }
 }
 
 export class RefreshToken extends Token {
   constructor(value: string, user: IIdentityUser) {
-    super();
-    this.type = TokenType.refresh;
-    this.value = value;
-    this.user = user;
+    super(TokenType.refresh, value, user);
   }
 }
