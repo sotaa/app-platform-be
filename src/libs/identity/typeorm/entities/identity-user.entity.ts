@@ -5,7 +5,7 @@ import { IEntity } from '../interfaces';
 
 @Entity()
 @TableInheritance({column: {type: 'nvarchar', name: 'type'}})
-export abstract class IdentityUser implements IEntity, IIdentityUser {
+export class IdentityUser implements IEntity, IIdentityUser {
   @PrimaryGeneratedColumn()
   id?: string;
   @Column()
