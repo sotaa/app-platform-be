@@ -13,10 +13,6 @@ export class User implements IUser , IEntity{
   @Column({nullable: true})
   lastName: string;
   @Index()
-  @Column()
-  @IsEmail()
-  username: string;
-  @Index()
   @Column({nullable: true})
   mobile: string;
   @Column({nullable: true})
