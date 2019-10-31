@@ -1,12 +1,12 @@
 import { Controller, Route, Post, Get, Path, Body, BodyProp } from 'tsoa';
 import { injectable, inject } from 'inversify';
-import { TYPES } from '../libs/user-directory';
+import { TYPES } from '../../libs/user-directory';
 import {
   IAuthService,
   IAuthResult,
   IAuthData,
   ITokenPair
-} from '../libs/identity/interfaces';
+} from '../../libs/identity/interfaces';
 
 @Route('auth')
 @injectable()

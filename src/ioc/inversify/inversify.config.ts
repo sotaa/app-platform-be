@@ -7,8 +7,8 @@ import {
   UserService
 } from '../../services';
 
-import { PaymentPlansController, ApplicationController, AuthController } from '../../controllers';
-import { UserController } from '../../controllers/user.controller';
+import { PaymentPlansController, ApplicationController, AuthController } from '../../express/controllers';
+import { UserController } from '../../express/controllers/user.controller';
 import { AuthService } from '../../services/auth.service';
 const identityConfig = require('../../config/identity.config.json');
 const iocContainer = new Container({skipBaseClassChecks: true});

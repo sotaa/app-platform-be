@@ -7,7 +7,7 @@
     "routes": {
         "basePath": "/",
         "entryFile": "./src/index.ts",
-        "routesDir": "./src/routes",
+        "routesDir": "./src/express/routes",
         "iocModule": "./src/ioc"
     }
 }

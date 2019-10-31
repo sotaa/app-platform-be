@@ -4,8 +4,8 @@ import './controllers';
 import * as express from 'express';
 import { RegisterRoutes } from './routes/routes';
 import * as swaggerUi from 'swagger-ui-express';
-import { DBConfiguration, initializeDatabase, clean } from './services';
-import { ILogger } from './logger';
+import { DBConfiguration, initializeDatabase, clean } from '../services';
+import { ILogger } from '../logger';
 import { logMiddleware } from './middlewares';
 
 export class UserDirectoryServer {
@@ -13,7 +13,7 @@ export class UserDirectoryServer {
   protected logger: ILogger;
   
   constructor(protected config: UserDirectoryConfiguration) {
-    this.logger = config.logger || console.log as any;
+    this.logger = config.logger || console as any;
     this.app = express();
   }
 
@@ -41,7 +41,7 @@ export class UserDirectoryServer {
 
   public enableDocumentation(url: string) {
     try {
-      const swaggerDocument = require('../swagger.json');
+      const swaggerDocument = require('../../swagger.json');
       this.app.use(url, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     } catch (err) {
       this.logger.error('Unable to load swagger.json', err);

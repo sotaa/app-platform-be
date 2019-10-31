@@ -3,7 +3,7 @@
  * This file should contain all required configuration for running application.
  */
 
-import { UserDirectoryServer } from './user-directory.server';
+import { UserDirectoryServer } from './express/user-directory.server';
 import { config as envConfig } from 'dotenv-flow';
 import { applicationLogger, requestLogger } from './logger/winston';
 
