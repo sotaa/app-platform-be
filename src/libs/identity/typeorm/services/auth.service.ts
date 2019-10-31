@@ -19,8 +19,8 @@ export class AuthService implements IAuthService {
 
   async register(authData: IAuthData): Promise<IAuthResult> {
 
-    const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator());
-    const validationResult = validator.validate(authData);
+    const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator(),username => this.manager.findOne(IdentityUser, {username}));
+    const validationResult = await validator.validate(authData);
 
     if(!validationResult.isValid) {
       throw validationResult.errors;
@@ -56,6 +56,7 @@ export class AuthService implements IAuthService {
     }
 
     const result = this.generateAuthResult(_user);
+    
     this.manager.transaction(async transactionManager => {
       await this.saveUserTokens(transactionManager, _user, result);
     });

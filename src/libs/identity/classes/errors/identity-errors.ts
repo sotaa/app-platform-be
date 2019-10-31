@@ -23,3 +23,7 @@ export class InvalidPasswordError extends Error {
 export class InvalidUsernameError extends Error {
     message = IdentityErrorCodes.USERNAME_IS_NOT_VALID;
 }
+
+export class DuplicateUsernameError extends Error {
+    message = IdentityErrorCodes.DUPLICATE_USERNAME;
+}

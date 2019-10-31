@@ -1,3 +1,5 @@
 export interface IValidator {
-    validate(...arg: any[]): { isValid: boolean, errors?: Error[]};
+    validate(...arg: any[]): IValidationResult | Promise<IValidationResult>;
 }
+
+export interface  IValidationResult { isValid: boolean, errors?: Error[]}

@@ -1,21 +1,30 @@
-import { IAuthData } from '../../interfaces';
-import { IValidator } from './validator';
-import { InvalidUsernameError, InvalidPasswordError } from '../errors/identity-errors';
-import { IRegexValidator } from './regex.validator';
+import { IAuthData, IIdentityUser } from '../../interfaces';
+import { UsernameValidator, PasswordValidator, IRegexValidator, IValidator, IValidationResult } from '.';
 
 export class AuthDataValidator implements IValidator {
-  constructor(protected config: IAuthValidatorConfig, protected regexValidator: IRegexValidator) {}
+  constructor(
+    protected config: IAuthValidatorConfig,
+    protected regexValidator: IRegexValidator,
+    protected userFinder: UserFinderFunction
+  ) {}
 
-  validate(authData: IAuthData): { isValid: boolean, errors: Error[]} {
-      const errors: Error[] = [];
-      if(!this.regexValidator.validate(this.config.username.regex, authData.username).isValid) {
-          errors.push(new InvalidUsernameError());
-      }
+  async validate(authData: IAuthData): Promise<IValidationResult> {
+    let errors: Error[] = [];
 
-      if(!this.regexValidator.validate(this.config.password.regex, authData.password).isValid) {
-          errors.push(new InvalidPasswordError());
-      }
-    return {isValid: errors.length === 0, errors};
+    const usernameValidator = new UsernameValidator(this.regexValidator, this.userFinder);
+    const usernameValidationResult = await usernameValidator.validate(this.config.username.regex, authData.username);
+
+    if (!usernameValidationResult.isValid) {
+      errors = [...errors, ...usernameValidationResult.errors];
+    }
+
+    const passwordValidator = new PasswordValidator(this.regexValidator);
+    const passwordValidationResult = passwordValidator.validate(this.config.password.regex, authData.password);
+
+    if (!passwordValidationResult.isValid) {
+      errors = [...errors, ...passwordValidationResult.errors];
+    }
+    return { isValid: errors.length === 0, errors };
   }
 }
 
@@ -24,7 +33,8 @@ export interface IAuthValidatorConfig {
   password: IRegexConfig;
 }
 
-
 export interface IRegexConfig {
   regex: string;
 }
+
+export type UserFinderFunction = (username: string) => IIdentityUser | Promise<IIdentityUser>;
