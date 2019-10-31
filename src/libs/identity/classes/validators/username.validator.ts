@@ -8,10 +8,11 @@ export class UsernameValidator implements IValidator {
     const errors: Error[] = [];
     if (!this.regexValidator.validate(regex, username).isValid) {
       errors.push(new InvalidUsernameError());
-    }
-    const user = await this.userFinder(username);
-    if (user) {
-      errors.push(new DuplicateUsernameError());
+    } else {
+      const user = await this.userFinder(username);
+      if (user) {
+        errors.push(new DuplicateUsernameError());
+      }
     }
     return { isValid: errors.length === 0, errors };
   }

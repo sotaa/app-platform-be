@@ -13,7 +13,7 @@ export class AuthController extends Controller {
   @Post('register')
   public async register(@Body() authData: IAuthData): Promise<IAuthResult> {
     try {
-      return this.authService.register(authData);
+      return await this.authService.register(authData);
     } catch (e) {
       this.setStatus(BAD_REQUEST);
       return e;

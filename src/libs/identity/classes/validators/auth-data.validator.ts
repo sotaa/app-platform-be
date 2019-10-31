@@ -1,5 +1,5 @@
 import { IAuthData, IIdentityUser } from '../../interfaces';
-import { UsernameValidator, PasswordValidator, IRegexValidator, IValidator, IValidationResult } from '.';
+import { UsernameValidator, PasswordValidator, IRegexValidator, IValidator, IValidationResult, UserFinderFunction } from '.';
 
 export class AuthDataValidator implements IValidator {
   constructor(
@@ -36,5 +36,3 @@ export interface IAuthValidatorConfig {
 export interface IRegexConfig {
   regex: string;
 }
-
-export type UserFinderFunction = (username: string) => IIdentityUser | Promise<IIdentityUser>;
