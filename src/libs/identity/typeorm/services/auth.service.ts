@@ -7,6 +7,8 @@ import { WrongPasswordError, UserNameNotFoundError } from '../../classes/errors/
 import { ITokenManager } from '../../helpers/token.manager';
 import { IdentityUser, Token } from '../entities';
 import { RefreshToken, AccessToken } from '../../classes/tokens';
+import { AuthDataValidator } from '../../classes/validators';
+import { RegexValidator } from '../../classes/validators/regex.validator';
 
 export class AuthService implements IAuthService {
   constructor(
@@ -16,12 +18,19 @@ export class AuthService implements IAuthService {
   ) {}
 
   async register(authData: IAuthData): Promise<IAuthResult> {
+
+    const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator());
+    const validationResult = validator.validate(authData);
+
+    if(!validationResult.isValid) {
+      throw validationResult.errors;
+    }
+
     const hashedPassword = await hash(authData.password);
     let user = this.manager.create(IdentityUser, {
       username: authData.username,
       password: hashedPassword
     });
-
     let result;
 
     await this.manager.transaction(async transactionEntityManager => {

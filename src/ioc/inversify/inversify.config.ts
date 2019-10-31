@@ -17,7 +17,7 @@ iocContainer.bind(TYPES.IApplicationService).to(ApplicationService).inSingletonS
 iocContainer.bind(TYPES.IInvoiceService).to(InvoiceService).inSingletonScope();
 iocContainer.bind(TYPES.IPaymentPlanService).to(PaymentPlanService).inSingletonScope();
 iocContainer.bind(TYPES.IAuthService).to(AuthService).inSingletonScope();
-iocContainer.bind(TYPES.IIdentityConfig).toConstantValue({tokenLife: identityConfig.tokenLifeTime, secretKey: identityConfig.secretKey});
+iocContainer.bind(TYPES.IIdentityConfig).toConstantValue(identityConfig);
 iocContainer.bind(TYPES.IUserService).to(UserService).inSingletonScope();
 
 

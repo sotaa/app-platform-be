@@ -1,4 +1,14 @@
 {
-  "tokenLifeTime": 3600,
-  "secretKey": "secret_key"
+  "tokenLife": 3600,
+  "secretKey": "secret_key",
+  "validations": {
+    "authData": {
+      "password": {
+        "regex": "^.{6,}$"
+      },
+      "username": {
+        "regex": "^\\w{1,}@\\w{1,}\\.\\w{1,}$"
+      }
+    }
+  }
 }
