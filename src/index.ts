@@ -7,6 +7,8 @@ import { UserDirectoryServer } from './express/user-directory.server';
 import { config as envConfig } from 'dotenv-flow';
 import { applicationLogger, requestLogger } from './logger/winston';
 
+async function createServer() {
+
 const appLogger = console;// applicationLogger;
 
 envConfig();
@@ -26,18 +28,20 @@ if (config.mode !== 'prod' && config.mode !== 'production') {
 }
 
 /** Start the server */
-userDirectory.start(config.port || 3000).then(() => {
+await userDirectory.start(config.port || 3000);
   /** Cleaning application for testing */
   if (config.mode === 'test') {
-    userDirectory.clean().then(() => appLogger.log(`database has been cleaned.`));
+    await userDirectory.clean();
+    appLogger.log(`database has been cleaned.`);
+    userDirectory.app.emit('start test');
   }
-});
 
-
+return userDirectory;
+}
 /**
  * We need to export the app for testing purposes.
  */
-export default userDirectory.app;
+export const userDirectory = createServer();
 
 /**
  * extract environment variables and return it as an object.

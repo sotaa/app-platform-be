@@ -1,8 +1,8 @@
 import 'mocha';
-import userDirectory from '..';
+import {userDirectory as UDPromise} from '..';
 import * as chai from 'chai';
 import chaiHttp = require('chai-http');
-import { IPaymentPlan } from '../libs/user-directory';
+import { Express } from 'express';
 
 chai.use(chaiHttp);
 let should = chai.should();
@@ -18,6 +18,11 @@ let sample = {
 
 let id = 1;
 
+let userDirectory: Express;
+
+before(async () => {
+  userDirectory = (await UDPromise).app;
+});
 describe('Payment-Plans', () => {
   describe('GET: /payment-plans', () => {
     it('should return status 200 with an empty array in body', () => {
@@ -43,6 +48,7 @@ describe('Payment-Plans', () => {
             .have.property('id')
             .and.be.greaterThan(0);
           expect(res.body.name).to.be.deep.equal(sample.name);
+          id = res.body.id;
         });
     });
   });
@@ -56,7 +62,7 @@ describe('Payment-Plans', () => {
           expect(res).have.status(200);
           expect(res.body)
             .have.property('id')
-            .and.be.equal(1);
+            .and.be.equal(id);
         });
     });
   });
