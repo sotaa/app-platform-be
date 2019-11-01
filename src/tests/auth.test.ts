@@ -25,6 +25,9 @@ before(async () => {
   userDirectory = (await UDPromise).app;
 });
 describe('Authentication', () => {
+  
+  let loginData: any;
+
   describe('Register', () => {
     it('Should register new user', async () => {
       const regResult = await chai
@@ -37,6 +40,7 @@ describe('Authentication', () => {
       expect(regResult.body.user).not.undefined;
       expect(regResult.body.user.id).and.be.greaterThan(0);
       expect(regResult.body.user.username).not.undefined;
+      loginData = regResult.body;
     });
 
     it('Should return invalid password error', async () => {
@@ -115,6 +119,24 @@ describe('Authentication', () => {
       expect(loginResult.body instanceof Object).be.true;
       expect(loginResult.body).eql({ message: IdentityErrorCodes.PASSWORD_IS_WRONG });
       expect(loginResult.status).eq(400);
+    });
+  });
+
+  describe('Refresh Token', () => {
+    it('Should get new token pair', async () => {
+      const rtResult = await chai.request(userDirectory).get('/auth/token/' + loginData.refreshToken);
+      expect(rtResult.body.refreshToken).be.string;
+      expect(rtResult.body.refreshToken.length).greaterThan(20);
+      expect(rtResult.body.token).be.string;
+      expect(rtResult.body.token.length).greaterThan(20);
+      expect(rtResult.status).eq(200);
+    });
+
+    it('Should return invalid refresh token error', async () => {
+      const rtResult = await chai.request(userDirectory).get('/auth/token/AN_INVALID_TOKEN');
+      expect(rtResult.body instanceof Object).be.true;
+      expect(rtResult.body).eql({ message: IdentityErrorCodes.TOKEN_IS_NOT_VALID });
+      expect(rtResult.status).eq(400);
     });
   });
 });
