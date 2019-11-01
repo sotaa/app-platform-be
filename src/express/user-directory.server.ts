@@ -57,6 +57,7 @@ export class UserDirectoryServer {
   public async start(port: string | number) {
     this.initialize();
     await initializeDatabase(this.config.dbConfig);
+    this.logger.info(`Connected to database ${this.config.dbConfig.database} on server ${this.config.dbConfig.host}`)
     this.app.listen(port, () => this.logger.info(`User Directory is started on port ${port}`));
   }
 }
