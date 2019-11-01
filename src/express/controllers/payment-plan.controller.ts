@@ -9,11 +9,13 @@ export class PaymentPlansController extends Controller {
       super();
   }
   
+  // TODO: this method should return just active plans for none admin users.
   @Get()
   async list(@Query() filter?: any): Promise<IPaymentPlan[]> {
     return this.paymentPlanService.find(filter);
   }
 
+  /** the methods down below should be forbidden for none admin users. */
   @Get('{id}')
   async find(id: number): Promise<IPaymentPlan> {
     return this.paymentPlanService.findById(id);
