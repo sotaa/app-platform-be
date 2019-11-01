@@ -22,7 +22,12 @@ export class AuthController extends Controller {
 
   @Post('login')
   public async login(@Body() authData: IAuthData): Promise<IAuthResult> {
-    return this.authService.login(authData);
+    try {
+      return await this.authService.login(authData);
+    } catch (e) {
+      this.setStatus(BAD_REQUEST);
+      return e;
+    }
   }
 
   @Post('reset-password')
