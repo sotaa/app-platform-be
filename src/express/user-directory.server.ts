@@ -54,9 +54,9 @@ export class UserDirectoryServer {
     process.on('warning', this.logger.warn.bind(this))
   }
 
-  public start(port: string | number) {
+  public async start(port: string | number) {
     this.initialize();
-    initializeDatabase(this.config.dbConfig);
+    await initializeDatabase(this.config.dbConfig);
     this.app.listen(port, () => this.logger.info(`User Directory is started on port ${port}`));
   }
 }

@@ -26,12 +26,13 @@ if (config.mode !== 'prod' && config.mode !== 'production') {
 }
 
 /** Start the server */
-userDirectory.start(config.port || 3000);
+userDirectory.start(config.port || 3000).then(() => {
+  /** Cleaning application for testing */
+  if (config.mode === 'test') {
+    userDirectory.clean().then(() => appLogger.log(`database has been cleaned.`));
+  }
+});
 
-/** Cleaning application for testing */
-if (config.mode === 'test') {
-  userDirectory.clean();
-}
 
 /**
  * We need to export the app for testing purposes.
