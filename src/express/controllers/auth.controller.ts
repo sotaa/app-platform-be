@@ -37,6 +37,11 @@ export class AuthController extends Controller {
 
   @Get('token/{refreshToken}')
   public async renewToken(refreshToken: string): Promise<ITokenPair> {
-    return this.authService.renewToken(refreshToken);
+    try {
+      return await this.authService.renewToken(refreshToken);
+    } catch (e) {
+      this.setStatus(BAD_REQUEST);
+      return e;
+    }
   }
 }

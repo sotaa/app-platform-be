@@ -3,7 +3,7 @@ import { EntityManager } from 'typeorm';
 import { AuthResult } from '../../classes/auth-result.model';
 import { IIdentityConfig } from '../../interfaces/models/config.interface';
 import { compare, hash } from '../../helpers/crypto';
-import { WrongPasswordError, UserNameNotFoundError } from '../../classes/errors/identity-errors';
+import { WrongPasswordError, UserNameNotFoundError, InvalidTokenError } from '../../classes/errors/identity-errors';
 import { ITokenManager } from '../../helpers/token.manager';
 import { IdentityUser, Token } from '../entities';
 import { RefreshToken, AccessToken } from '../../classes/tokens';
@@ -18,11 +18,12 @@ export class AuthService implements IAuthService {
   ) {}
 
   async register(authData: IAuthData): Promise<IAuthResult> {
-
-    const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator(),username => this.manager.findOne(IdentityUser, {username}));
+    const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator(), username =>
+      this.manager.findOne(IdentityUser, { username })
+    );
     const validationResult = await validator.validate(authData);
 
-    if(!validationResult.isValid) {
+    if (!validationResult.isValid) {
       throw validationResult.errors;
     }
 
@@ -56,7 +57,7 @@ export class AuthService implements IAuthService {
     }
 
     const result = this.generateAuthResult(_user);
-    
+
     this.manager.transaction(async transactionManager => {
       await this.saveUserTokens(transactionManager, _user, result);
     });
@@ -69,14 +70,19 @@ export class AuthService implements IAuthService {
     throw new Error('Method not implemented.');
   }
 
-  renewToken(refreshToken: string): ITokenPair {
-    const data = this.tokenManager.extract(refreshToken, this.config.secretKey);
+  async renewToken(refreshToken: string): Promise<ITokenPair> {
+    let data;
+    try {
+      data = this.tokenManager.extract(refreshToken, this.config.secretKey);
+    } catch (e) {
+      throw new InvalidTokenError();
+    }
     const result = {
       token: this.tokenManager.generate(data, this.config.secretKey, this.config.tokenLife),
       refreshToken: this.tokenManager.generate(data, this.config.secretKey)
     };
 
-    this.saveUserTokens(this.manager, data.user, result);
+    await this.saveUserTokens(this.manager, data.user, result);
     return result;
   }
 
@@ -90,14 +96,18 @@ export class AuthService implements IAuthService {
 
   private generateAuthResult(_user: IdentityUser) {
     const result = new AuthResult();
+
+    /** This user object will be inserted to token and result as user data */
+    const user = { id: _user.id, username: _user.username };
+
     result.expiresIn = this.config.tokenLife;
     result.token = this.tokenManager.generate(
-      { id: _user.id, username: _user.username },
+    {user},
       this.config.secretKey,
       this.config.tokenLife
     );
-    result.refreshToken = this.tokenManager.generate({ id: _user.id, username: _user.username }, this.config.secretKey);
-    result.user = { id: _user.id, username: _user.username };
+    result.refreshToken = this.tokenManager.generate({user}, this.config.secretKey);
+    result.user = user;
     return result;
   }
 }
