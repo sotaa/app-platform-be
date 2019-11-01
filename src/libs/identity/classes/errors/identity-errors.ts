@@ -15,3 +15,15 @@ export class TokenExpiredError extends Error {
 export class InvalidTokenError extends Error {
     message = IdentityErrorCodes.TOKEN_IS_NOT_VALID;
 }
+
+export class InvalidPasswordError extends Error {
+    message = IdentityErrorCodes.PASSWORD_IS_INVALID;
+}
+
+export class InvalidUsernameError extends Error {
+    message = IdentityErrorCodes.USERNAME_IS_NOT_VALID;
+}
+
+export class DuplicateUsernameError extends Error {
+    message = IdentityErrorCodes.DUPLICATE_USERNAME;
+}

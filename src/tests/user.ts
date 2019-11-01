@@ -1,7 +1,8 @@
 import 'mocha';
-import userDirectory from '..';
+import {userDirectory as UDPromise} from '..';
 import * as chai from 'chai';
 import chaiHttp = require('chai-http');
+import {Express } from 'express';
 
 chai.use(chaiHttp);
 let should = chai.should();
@@ -23,6 +24,12 @@ let sample = {
 };
 
 let id = 1;
+
+let userDirectory: Express;
+
+before(async () => {
+  userDirectory = (await UDPromise).app;
+});
 
 describe('users', () => {
   describe('GET: /users', () => {

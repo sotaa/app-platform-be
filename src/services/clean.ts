@@ -1,10 +1,10 @@
-import { getConnection } from 'typeorm';
+import { getConnection, getRepository } from 'typeorm';
 
 export async function clean() {
   const entities = await getEntities();
   try {
     for (const entity of entities) {
-      const repository = await this.databaseService.getRepository(entity.name);
+      const repository = await getRepository(entity.name);
       await repository.query(`DELETE FROM ${entity.tableName};`);
     }
   } catch (error) {
@@ -14,7 +14,7 @@ export async function clean() {
 
 async function getEntities() {
   const entities: { name: any; tableName: any }[] = [];
-  (await  getConnection().entityMetadatas).forEach(
+  getConnection().entityMetadatas.forEach(
     (x: { name: any; tableName: any }) =>
       entities.push({ name: x.name, tableName: x.tableName })
   );

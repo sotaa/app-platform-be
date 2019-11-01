@@ -4,7 +4,7 @@ import { IUser } from './user.interface';
 export interface IInvoice {
   user: IUser;
   plan: IPaymentPlan;
-  date?: object;
+  date?: Date;
   isPaid?: boolean;
   authority: string;
   description?: string;

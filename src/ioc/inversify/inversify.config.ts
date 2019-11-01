@@ -7,8 +7,8 @@ import {
   UserService
 } from '../../services';
 
-import { PaymentPlansController, ApplicationController, AuthController } from '../../controllers';
-import { UserController } from '../../controllers/user.controller';
+import { PaymentPlansController, ApplicationController, AuthController } from '../../express/controllers';
+import { UserController } from '../../express/controllers/user.controller';
 import { AuthService } from '../../services/auth.service';
 const identityConfig = require('../../config/identity.config.json');
 const iocContainer = new Container({skipBaseClassChecks: true});
@@ -17,7 +17,7 @@ iocContainer.bind(TYPES.IApplicationService).to(ApplicationService).inSingletonS
 iocContainer.bind(TYPES.IInvoiceService).to(InvoiceService).inSingletonScope();
 iocContainer.bind(TYPES.IPaymentPlanService).to(PaymentPlanService).inSingletonScope();
 iocContainer.bind(TYPES.IAuthService).to(AuthService).inSingletonScope();
-iocContainer.bind(TYPES.IIdentityConfig).toConstantValue({tokenLife: identityConfig.tokenLifeTime, secretKey: identityConfig.secretKey});
+iocContainer.bind(TYPES.IIdentityConfig).toConstantValue(identityConfig);
 iocContainer.bind(TYPES.IUserService).to(UserService).inSingletonScope();
 
 
