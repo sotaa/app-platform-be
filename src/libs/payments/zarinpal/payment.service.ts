@@ -1,10 +1,12 @@
-import { IOnlinePaymentMethod, IPaymentResult, IOnlinePaymentResult, PaymentStatus } from '../bin';
+import { IOnlinePaymentMethod, IPaymentResult, IOnlinePaymentResult, PaymentStatus } from '../lib';
 
 const zPal = require('zarinpal-checkout');
 
 export class ZarinpalPaymentMethod implements IOnlinePaymentMethod {
+
   readonly providerName = 'ZarinPal';
   zPalClient: any;
+  
   constructor(public readonly merchantId: string, sandbox: boolean) {
     this.zPalClient = zPal.create(merchantId, sandbox);
   }

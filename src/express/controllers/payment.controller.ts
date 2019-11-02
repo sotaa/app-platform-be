@@ -4,9 +4,10 @@ import { IInvoiceService, IUserService, TYPES, IPaymentPlanService, PaymentStatu
 import { Request as IRequest, Response as IResponse } from 'express';
 import { IIdentityUser } from '../../libs/identity/interfaces';
 import { BAD_REQUEST, UNAUTHORIZED } from 'http-status-codes';
-import { IPaymentResult, ZarinpalPaymentMethod } from '../../libs/payments';
+import { IPaymentResult } from '../../libs/payments';
 import { ITenant } from '../../libs/user-directory/interfaces/models/tenant.model';
-import { IOnlinePaymentManager } from '../../libs/payments/bin/online-payment-manager.interface';
+import { IOnlinePaymentManager } from '../../libs/payments/lib/online-payment-manager.interface';
+import { ZarinpalPaymentMethod } from '../../libs/payments/zarinpal';
 
 @Route('payment')
 @injectable()
@@ -41,6 +42,7 @@ export class PaymentController extends Controller {
 
     const invoice = await this.invoiceService.createInvoice(udUser, plan);
     const zPal = new ZarinpalPaymentMethod('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', true);
+    // TODO: save transaction to DB.
     return await this.paymentManager.pay(invoice,zPal);
   }
 
@@ -49,9 +51,12 @@ export class PaymentController extends Controller {
   public async verify(@Query() params: any, @Request() req: IRequest) {
 
     const zPal = new ZarinpalPaymentMethod('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', true);
-
+    
     const paymentResult = await this.paymentManager.verify(params, zPal);
-
+    // if paymentResult is successful. 
+      // upgrade the user. and change transaction status to success.
+      // commit the transaction in bank.
+      
     if (paymentResult.status === PaymentStatus.successful) {
       req.res.redirect(this.tenant.successPaymentPage);
     } else {

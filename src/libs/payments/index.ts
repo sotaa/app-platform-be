@@ -1,2 +1,1 @@
-export * from './bin';
-export * from './zarrinpal';
+export * from './lib';
