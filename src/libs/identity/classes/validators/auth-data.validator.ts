@@ -1,4 +1,4 @@
-import { IAuthData, IIdentityUser } from '../../interfaces';
+import { IAuthData } from '../../interfaces';
 import { UsernameValidator, PasswordValidator, IRegexValidator, IValidator, IValidationResult, UserFinderFunction } from '.';
 
 export class AuthDataValidator implements IValidator {
