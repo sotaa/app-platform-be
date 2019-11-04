@@ -1,4 +1,4 @@
-import { IAuthService, IAuthData, IAuthResult, TokenType, IToken, ITokenPair } from '../../interfaces';
+import { IAuthService, IAuthData, IAuthResult, ITokenPair } from '../../interfaces';
 import { EntityManager } from 'typeorm';
 import { AuthResult } from '../../classes/auth-result.model';
 import { IIdentityConfig } from '../../interfaces/models/config.interface';

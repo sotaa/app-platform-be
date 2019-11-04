@@ -6,7 +6,10 @@ import { RegisterRoutes } from './routes/routes';
 import * as swaggerUi from 'swagger-ui-express';
 import { DBConfiguration, initializeDatabase, clean } from '../services';
 import { ILogger } from '../logger';
-import { logMiddleware } from './middlewares';
+import { logMiddleware, createAuthMiddleware } from './middlewares';
+import { iocContainer } from '../ioc';
+import { TYPES } from '../libs/user-directory';
+import { IIdentityConfig } from '../libs/identity/interfaces';
 
 export class UserDirectoryServer {
   app: express.Express;
@@ -20,6 +23,8 @@ export class UserDirectoryServer {
   private async initialize() {
     this.app.use(express.json());
     this.handleUncaughtExceptions();
+    // TODO: this shit should be somewhere to make sense. it's here now to make the app works.
+    this.app.use(createAuthMiddleware(iocContainer.get<IIdentityConfig>(TYPES.IIdentityConfig).secretKey))
     RegisterRoutes(this.app);
   }
   

@@ -1,7 +1,6 @@
 import { Invoice } from './invoice.entity';
 import { Column, Index, OneToMany, ChildEntity, PrimaryColumn, PrimaryGeneratedColumn, Entity } from 'typeorm';
 import { IUser } from '../../interfaces/models/user.interface';
-import {IsEmail, } from 'class-validator';
 import { IEntity } from './interfaces/entity.interface';
 
 @Entity()
@@ -12,10 +11,6 @@ export class User implements IUser , IEntity{
   firstName: string; 
   @Column({nullable: true})
   lastName: string;
-  @Index()
-  @Column()
-  @IsEmail()
-  username: string;
   @Index()
   @Column({nullable: true})
   mobile: string;

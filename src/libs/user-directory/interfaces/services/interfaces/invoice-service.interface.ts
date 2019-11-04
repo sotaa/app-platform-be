@@ -1,4 +1,5 @@
-import { ICRUDService } from './crud-service.interface';
-import { IInvoice } from '../../models';
+import { IInvoice, IUser, IPaymentPlan } from '../../models';
 
-export interface IInvoiceService extends ICRUDService<IInvoice> {}
+export interface IInvoiceService {
+    createInvoice(user: IUser , plan: IPaymentPlan): Promise<IInvoice>;
+}

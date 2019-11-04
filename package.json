@@ -21,6 +21,7 @@
     "class-validator": "^0.10.2",
     "dotenv-flow": "^3.1.0",
     "express": "^4.17.1",
+    "express-jwt": "^5.3.1",
     "http-status-codes": "^1.4.0",
     "inversify": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
@@ -29,13 +30,15 @@
     "swagger-ui-express": "^4.1.2",
     "tsoa": "^2.5.6",
     "typeorm": "^0.2.19",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "zarinpal-checkout": "^0.2.7"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/chai": "4.0.4",
     "@types/chai-http": "^4.2.0",
     "@types/dotenv-flow": "^3.0.0",
+    "@types/express-jwt": "0.0.42",
     "@types/jsonwebtoken": "^8.3.5",
     "@types/mocha": "^2.2.43",
     "@types/swagger-ui-express": "^3.0.1",
