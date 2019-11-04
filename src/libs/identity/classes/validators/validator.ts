@@ -1,3 +1,4 @@
+
 export interface IValidator {
     validate(...arg: any[]): IValidationResult | Promise<IValidationResult>;
 }

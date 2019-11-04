@@ -1,4 +1,5 @@
 import { IdentityErrorCodes } from "../../enums/error-codes.enum";
+import { IValidationError } from "../validators";
 
 export class UserNameNotFoundError extends Error {
     message = IdentityErrorCodes.USERNAME_NOT_FOUND;
@@ -27,3 +28,10 @@ export class InvalidUsernameError extends Error {
 export class DuplicateUsernameError extends Error {
     message = IdentityErrorCodes.DUPLICATE_USERNAME;
 }
+
+
+export class ValidationError extends Error implements IValidationError{
+    constructor(public field: string, public errors: Error[]) {
+      super(IdentityErrorCodes.VALIDATION_ERROR);
+    }
+  }

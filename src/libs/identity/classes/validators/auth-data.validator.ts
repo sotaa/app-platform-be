@@ -1,5 +1,7 @@
 import { IAuthData } from '../../interfaces';
 import { UsernameValidator, PasswordValidator, IRegexValidator, IValidator, IValidationResult, UserFinderFunction } from '.';
+import { IValidationError, ValidationError } from '../errors';
+
 
 export class AuthDataValidator implements IValidator {
   constructor(
@@ -9,22 +11,22 @@ export class AuthDataValidator implements IValidator {
   ) {}
 
   async validate(authData: IAuthData): Promise<IValidationResult> {
-    let errors: Error[] = [];
+    let errors: IValidationError[] = [];
 
     const usernameValidator = new UsernameValidator(this.regexValidator, this.userFinder);
     const usernameValidationResult = await usernameValidator.validate(this.config.username.regex, authData.username);
 
     if (!usernameValidationResult.isValid) {
-      errors = [...errors, ...usernameValidationResult.errors];
+      errors = [...errors, new ValidationError('username', usernameValidationResult.errors)];
     }
 
     const passwordValidator = new PasswordValidator(this.regexValidator);
     const passwordValidationResult = passwordValidator.validate(this.config.password.regex, authData.password);
 
     if (!passwordValidationResult.isValid) {
-      errors = [...errors, ...passwordValidationResult.errors];
+      errors = [...errors, new ValidationError('password', passwordValidationResult.errors)];
     }
-    return { isValid: errors.length === 0, errors };
+    return { isValid: errors.length === 0, errors: errors };
   }
 }
 
