@@ -1,4 +1,4 @@
-import { Controller, Route, Get, Query , Post, Body, Delete, Put } from 'tsoa';
+/* import { Controller, Route, Get, Query , Post, Body, Delete, Put } from 'tsoa';
 import { IUser, IUserService, TYPES } from '../../libs/user-directory/interfaces';
 import { inject, injectable } from 'inversify';
 
@@ -35,3 +35,4 @@ export class UserController extends Controller {
      return this.userService.delete(id);
    }
 }
+*/
