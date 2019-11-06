@@ -2,12 +2,13 @@ import { IToken } from '../../../identity/interfaces/models/token.interface';
 import { IInvoice } from './invoice.interface';
 
 export interface IUser {
+  id: string;
   firstName?: string;
   lastName?: string;
   email: string;
   sex?: 'male' | 'female';
   mobile?: string;
   expireDate?: Date;
-  registerDate: Date;
-  invoices: IInvoice[];
+  registerDate?: Date;
+  invoices?: IInvoice[];
 }
