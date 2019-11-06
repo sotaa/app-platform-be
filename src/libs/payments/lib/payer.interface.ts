@@ -1,6 +1,10 @@
-import { IPaymentResult, IInvoice } from "../../user-directory";
-import { IPaymentMethod } from "./payment-method.interface";
+import { IPaymentResult, IInvoice } from '../../user-directory';
 
 export interface IPayer {
-    pay(invoice: IInvoice, method: IPaymentMethod): Promise<IPaymentResult>;
+  /**
+   * Pay an invoice.
+   * @param invoice The invoice needs be paid.
+   * @param callBackUrl The payer object might need to call a url for passing result of payments
+   */
+  pay(invoice: IInvoice, callbackUrl?: string): Promise<IPaymentResult>;
 }

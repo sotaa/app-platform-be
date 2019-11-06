@@ -5,6 +5,7 @@ import { PaymentStatus } from '../../../payments/lib/models/payment-status.type'
 export interface IInvoice {
   user: IUser;
   plan: IPaymentPlan;
+  payPrice: number;
   createDate?: Date;
   paymentStatus?: PaymentStatus;
   description?: string;

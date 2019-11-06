@@ -1,13 +1,13 @@
-import { Controller, Route, Request, Post, Response, Get, Query, SuccessResponse } from 'tsoa';
+import { Controller, Route, Request, Post, Get, Query, SuccessResponse } from 'tsoa';
 import { injectable, inject } from 'inversify';
-import { IInvoiceService, IUserService, TYPES, IPaymentPlanService, PaymentStatus } from '../../libs/user-directory';
+import { IInvoiceService, TYPES, IPaymentPlanService, IUserService, PaymentStatus } from '../../libs/user-directory';
 import { Request as IRequest, Response as IResponse } from 'express';
 import { IIdentityUser } from '../../libs/identity/interfaces';
-import { BAD_REQUEST, UNAUTHORIZED } from 'http-status-codes';
-import { IPaymentResult } from '../../libs/payments';
+import { BAD_REQUEST, UNAUTHORIZED, NOT_FOUND } from 'http-status-codes';
+import { IPaymentResult, ITransaction, TransactionStatus } from '../../libs/payments';
 import { ITenant } from '../../libs/user-directory/interfaces/models/tenant.model';
-import { IOnlinePaymentManager } from '../../libs/payments/lib/online-payment-manager.interface';
 import { ZarinpalPaymentMethod } from '../../libs/payments/zarinpal';
+import { ITransactionService } from '../../libs/payments/lib/services/interfaces/transaction-service.interface';
 
 @Route('payment')
 @injectable()
@@ -15,7 +15,7 @@ export class PaymentController extends Controller {
   constructor(
     private invoiceService: IInvoiceService,
     private tenant: ITenant,
-    private paymentManager: IOnlinePaymentManager,
+    private transactionService: ITransactionService,
     @inject(TYPES.IPaymentPlanService) private planService: IPaymentPlanService,
     @inject(TYPES.IUserService) private userService: IUserService
   ) {
@@ -43,24 +43,44 @@ export class PaymentController extends Controller {
     const invoice = await this.invoiceService.createInvoice(udUser, plan);
     const zPal = new ZarinpalPaymentMethod('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', true);
     // TODO: save transaction to DB.
-    return await this.paymentManager.pay(invoice,zPal);
+    // TODO: add proper callback url with transactionId.
+    return await zPal.pay(invoice, 'CALLBACK_URL');
   }
 
-  @Get()
+  @Get('verify/{transactionKey}')
   @SuccessResponse(302, 'Redirect')
-  public async verify(@Query() params: any, @Request() req: IRequest) {
+  public async verify(transactionKey: string, @Query() params: any, @Request() req: IRequest) {
+    const transaction = await this.transactionService.findByKey(transactionKey);
+    if (!transaction) {
+      this.setStatus(NOT_FOUND);
+      return new Error('TRANSACTION_KEY_NOT_FOUND');
+    }
 
     const zPal = new ZarinpalPaymentMethod('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', true);
-    
-    const paymentResult = await this.paymentManager.verify(params, zPal);
-    // if paymentResult is successful. 
-      // upgrade the user. and change transaction status to success.
-      // commit the transaction in bank.
-      
-    if (paymentResult.status === PaymentStatus.successful) {
-      req.res.redirect(this.tenant.successPaymentPage);
-    } else {
-      req.res.redirect(this.tenant.failedPaymentPage);
+    /**
+     * handle transaction failure.
+     */
+    if (!zPal.isSuccessful(params)) {
+      transaction.status = TransactionStatus.failed;
+      await this.transactionService.save(transaction);
+      // TODO: it should throw an error after it moved to it's own folder.
+      return req.res.redirect(this.tenant.failedPaymentPage);
     }
+
+    // upgrade the user. and change transaction status to success.
+    transaction.status = TransactionStatus.successful;
+    transaction.invoice.paymentStatus = PaymentStatus.paid;
+    // update invoice status.
+    const user = transaction.invoice.user;
+    // TODO: increase user's expire date.
+
+    this.transactionService.save(transaction);
+    // TODO: save the invoice.
+    
+    // commit the transaction in bank.
+    const veriResult = await zPal.verifyTransaction(params);
+    // TODO: save verifyResult.
+
+    req.res.redirect(this.tenant.successPaymentPage);
   }
 }
