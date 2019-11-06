@@ -3,7 +3,7 @@ import { PrimaryGeneratedColumn, ManyToOne, Column, Entity } from 'typeorm';
 import { User } from './user.entity';
 import { PaymentPlan } from './payment-plan.entity';
 import { IInvoice } from '../../interfaces/models/invoice.interface';
-import { PaymentStatus } from '../..';
+import { PaymentStatus } from '../../../payments';
 
 @Entity()
 export class Invoice implements IEntity, IInvoice {

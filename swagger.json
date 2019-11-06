@@ -114,6 +114,25 @@
 			],
 			"type": "object",
 			"additionalProperties": false
+		},
+		"PaymentStatus": {
+			"enum": [
+				0,
+				10
+			],
+			"type": "integer"
+		},
+		"IPaymentResult": {
+			"properties": {
+				"status": {
+					"$ref": "#/definitions/PaymentStatus"
+				}
+			},
+			"required": [
+				"status"
+			],
+			"type": "object",
+			"additionalProperties": false
 		}
 	},
 	"info": {
@@ -508,6 +527,57 @@
 					{
 						"in": "path",
 						"name": "refreshToken",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/payment/buy/{planId}": {
+			"post": {
+				"operationId": "Buy",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IPaymentResult"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "planId",
+						"required": true,
+						"type": "string"
+					}
+				]
+			}
+		},
+		"/payment/verify": {
+			"get": {
+				"operationId": "Verify",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"302": {
+						"description": "Redirect",
+						"schema": {
+							"additionalProperties": true,
+							"type": "object"
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "params",
 						"required": true,
 						"type": "string"
 					}

@@ -5,3 +5,4 @@ export * from './models/payment-status.type';
 export * from './models/transaction.model';
 export * from './transaction-repo.interface';
 export * from './models/transaction.status';
+export * from './services';
