@@ -40,8 +40,8 @@ export class PaymentService implements IPaymentService {
 
     try {
       await this.manager.transaction(async tManager => {
-        tManager.save(invoice);
-        tManager.save(transaction);
+        await tManager.save(invoice);
+        await tManager.save(transaction);
       });
     } catch(e) {
       console.log(e);
