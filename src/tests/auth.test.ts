@@ -50,7 +50,7 @@ describe('Authentication', () => {
         .send(wrongAuthData.invalidPassword);
       expect(regResult.status).eq(400);
       expect(regResult.body instanceof Array).be.true;
-      expect(regResult.body).eql([{ message: IdentityErrorCodes.PASSWORD_IS_INVALID }]);
+      expect(regResult.body).eql([{field: 'password', errors: [{ message: IdentityErrorCodes.PASSWORD_IS_INVALID }]}]);
     });
 
     it('Should return invalid username error', async () => {
@@ -60,7 +60,7 @@ describe('Authentication', () => {
         .send(wrongAuthData.invalidEmail);
       expect(regResult.status).eq(400);
       expect(regResult.body instanceof Array).be.true;
-      expect(regResult.body).eql([{ message: IdentityErrorCodes.USERNAME_IS_NOT_VALID }]);
+      expect(regResult.body).eql([{field: 'username', errors: [{ message: IdentityErrorCodes.USERNAME_IS_NOT_VALID }]}]);
     });
 
     it('Should return invalid password and invalid username error', async () => {
@@ -71,8 +71,8 @@ describe('Authentication', () => {
       expect(regResult.status).eq(400);
       expect(regResult.body instanceof Array).be.true;
       expect(regResult.body).eql([
-        { message: IdentityErrorCodes.USERNAME_IS_NOT_VALID },
-        { message: IdentityErrorCodes.PASSWORD_IS_INVALID }
+        {field: 'username', errors: [{ message: IdentityErrorCodes.USERNAME_IS_NOT_VALID }]},
+        {field: 'password', errors: [{ message: IdentityErrorCodes.PASSWORD_IS_INVALID }]}
       ]);
     });
 
@@ -83,7 +83,7 @@ describe('Authentication', () => {
         .send(wrongAuthData.duplicateUsername);
       expect(regResult.status).eq(400);
       expect(regResult.body instanceof Array).be.true;
-      expect(regResult.body).eql([{ message: IdentityErrorCodes.DUPLICATE_USERNAME }]);
+      expect(regResult.body).eql([{field: 'username', errors: [{ message: IdentityErrorCodes.DUPLICATE_USERNAME }]}]);
     });
   });
 
