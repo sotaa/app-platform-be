@@ -51,7 +51,12 @@ export class PaymentService implements IPaymentService {
     if (callbackUrl) {
       callbackUrl += callbackUrl + '?transactionKey=' + transaction.transactionKey;
     }
-    return await paymentMethod.pay(invoice, callbackUrl);
+    const paymentResult = await paymentMethod.pay(invoice, callbackUrl);
+    if(paymentResult.status === PaymentStatus.paid) {
+      // TODO: Upgrade the user.
+    }
+
+    return paymentResult;
   }
 
   /**
@@ -74,6 +79,9 @@ export class PaymentService implements IPaymentService {
       throw new Error('PAYMENT_FAILURE');
     }
 
+    /**
+     * it seems I need create a solution for making payment service independent from user upgrade.
+     */
     // upgrade the user. and change transaction status to success.
     const user = transaction.invoice.user;
     // TODO: increase user's expire date.
