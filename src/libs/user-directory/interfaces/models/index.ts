@@ -1,4 +1,4 @@
-export { IApplication } from './application.interface';
-export { IInvoice } from './invoice.interface';
-export { IPaymentPlan } from './payment-plan.interface';
-export { IUser } from './user.interface';
+export * from './application.interface';
+export * from './invoice.interface';
+export * from './payment-plan.interface';
+export * from './user.interface';

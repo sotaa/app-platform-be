@@ -3,6 +3,7 @@ import { injectable, inject } from 'inversify';
 import { TYPES, IUserService } from '../../libs/user-directory';
 import { IAuthService, IAuthResult, IAuthData, ITokenPair } from '../../libs/identity/interfaces';
 import { BAD_REQUEST } from 'http-status-codes';
+import { User } from '../../libs/user-directory/classes/models/user.model';
 @Route('auth')
 @injectable()
 export class AuthController extends Controller {
@@ -20,7 +21,7 @@ export class AuthController extends Controller {
        * But I will find out.
        */
       const authResult = await this.authService.register(authData);
-      await this.userService.create({ id: authResult.user.id, email: authData.username });
+      await this.userService.create(new User(authData.username, authResult.user.id));
       return authResult;
     } catch (e) {
       this.setStatus(BAD_REQUEST);

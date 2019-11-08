@@ -1,7 +1,10 @@
-import { IToken } from '../../../identity/interfaces/models/token.interface';
 import { IInvoice } from './invoice.interface';
 
-export interface IUser {
+export interface IUserBO {
+  upgrade(days: number): IUserBO;
+}
+
+export interface IUserDTO {
   id: string;
   firstName?: string;
   lastName?: string;
@@ -12,3 +15,5 @@ export interface IUser {
   registerDate?: Date;
   invoices?: IInvoice[];
 }
+
+export interface IUser extends IUserBO , IUserDTO {}

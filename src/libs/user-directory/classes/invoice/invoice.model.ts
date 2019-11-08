@@ -1,4 +1,4 @@
-import { IInvoice, IPaymentPlan, IUser } from '../../interfaces';
+import { IInvoice, IPaymentPlan, IUser, IUserDTO } from '../../interfaces';
 import { PaymentStatus } from '../../../payments';
 
 export class Invoice implements IInvoice {
