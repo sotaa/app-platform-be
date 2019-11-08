@@ -78,11 +78,12 @@ export class PaymentService implements IPaymentService {
     // upgrade the user.
     const user = await this.loadUser(transaction.invoice.user.id);
     user.upgrade(transaction.invoice.plan.dateRange);
-    
+
     let verifyResult: IPaymentResult;
 
     try {
       await this.manager.transaction(async tManager => {
+        await tManager.save(user);
         await tManager.save(transaction);
         await tManager.save(Invoice);
       });
