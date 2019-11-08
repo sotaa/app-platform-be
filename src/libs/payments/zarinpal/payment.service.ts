@@ -40,7 +40,7 @@ export class ZarinpalPaymentMethod implements IOnlinePaymentMethod {
     throw new Error('Method not implemented.');
   }
 
-  unPay(authority: string): IPaymentResult{
+  unPay(authority: string): Promise<IPaymentResult> {
     throw new Error('Method not implemented.');
   }
 }
