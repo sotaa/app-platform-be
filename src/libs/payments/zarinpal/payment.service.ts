@@ -15,9 +15,8 @@ export class ZarinpalPaymentMethod implements IOnlinePaymentMethod {
     const zPalTransaction = await this.createTransaction(invoice.payPrice , { user: invoice.user , callbackUrl});
 
     if (zPalTransaction.status === 100) {
-      return { completionEndpoint: zPalTransaction.url, status: PaymentStatus.incomplete };
+      return { completionEndpoint: zPalTransaction.url, transactionKey: zPalTransaction.Authority , status: PaymentStatus.incomplete };
     }
-
       throw new Error('Cannot create transaction in zarinpal service');
   }
 
@@ -38,6 +37,10 @@ export class ZarinpalPaymentMethod implements IOnlinePaymentMethod {
   }
 
   verifyTransaction(params: { Status: string; Authority: string }): Promise<IPaymentResult> {
+    throw new Error('Method not implemented.');
+  }
+
+  unPay(authority: string): IPaymentResult{
     throw new Error('Method not implemented.');
   }
 }

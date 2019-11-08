@@ -11,7 +11,7 @@ export class PaymentService implements IPaymentService {
   constructor(private manager: EntityManager) {}
 
   /**
-   *
+   * Buy functionality for a user who want to buy a product.
    * @param planId payment plan that want to buy.
    * @param userId id of user who want to buy the plan.
    * @param paymentMethod the method that is responsible for payment process.
@@ -23,37 +23,30 @@ export class PaymentService implements IPaymentService {
     paymentMethod: IPaymentMethod,
     callbackUrl?: string
   ): Promise<IPaymentResult> {
-    const plan = await this.manager.findOne(PaymentPlan, planId);
-
-    if (!plan) {
-      throw new Error('INVALID_PLAN_ID') as any;
-    }
-
-    const udUser = await this.manager.findOne(User, userId);
-
-    if (!udUser) {
-      throw new Error('USER_NOT_FOUND');
-    }
+    const plan = await this.loadPlan(planId);
+    const udUser = await this.loadUser(userId);
 
     const invoice = new Invoice(udUser, plan);
     const transaction = new Transaction(invoice, TransactionStatus.pending);
+
+    if (callbackUrl) {
+      callbackUrl += callbackUrl + '?transactionKey=' + transaction.transactionKey;
+    }
+
+    let paymentResult = await paymentMethod.pay(invoice, callbackUrl);
+
+    if (paymentResult.status === PaymentStatus.paid) {
+      invoice.paymentStatus = PaymentStatus.paid;
+    }
 
     try {
       await this.manager.transaction(async tManager => {
         await tManager.save(invoice);
         await tManager.save(transaction);
       });
-    } catch(e) {
-      console.log(e);
+    } catch (e) {
+      paymentResult = await paymentMethod.unPay(paymentResult.transactionKey);
       throw new Error(`DATABASE_SAVING_FAILURE`);
-    }
-
-    if (callbackUrl) {
-      callbackUrl += callbackUrl + '?transactionKey=' + transaction.transactionKey;
-    }
-    const paymentResult = await paymentMethod.pay(invoice, callbackUrl);
-    if(paymentResult.status === PaymentStatus.paid) {
-      // TODO: Upgrade the user.
     }
 
     return paymentResult;
@@ -65,10 +58,7 @@ export class PaymentService implements IPaymentService {
    * @param paymentMethod the payment method that is responsible for verifying the payment.
    */
   async verify(params: any, paymentMethod: IOnlinePaymentMethod): Promise<IPaymentResult> {
-    const transaction = await this.manager.findOne<ITransaction>(params.transactionKey);
-    if (!transaction) {
-      throw new Error('TRANSACTION_KEY_NOT_FOUND');
-    }
+    const transaction = await this.loadTransaction(params.transactionKey);
 
     /**
      * handle transaction failure.
@@ -79,25 +69,64 @@ export class PaymentService implements IPaymentService {
       throw new Error('PAYMENT_FAILURE');
     }
 
-    /**
-     * it seems I need create a solution for making payment service independent from user upgrade.
-     */
-    // upgrade the user. and change transaction status to success.
-    const user = transaction.invoice.user;
-    // TODO: increase user's expire date.
-
     // update invoice status.
     transaction.status = TransactionStatus.successful;
     transaction.invoice.paymentStatus = PaymentStatus.paid;
 
-    this.manager.transaction(async tManager => {
-       await tManager.save(transaction);
-       await tManager.save(Invoice);
-    });
-
     // commit the transaction in bank.
-    const verifyResult = await paymentMethod.verifyTransaction(params);
-    this.manager.save(verifyResult);   
+    let verifyResult = await paymentMethod.verifyTransaction(params);
+    // didn't use await because it is not necessary to wait for result of this operation.
+    this.manager.save(verifyResult);
+
+    try {
+      await this.manager.transaction(async tManager => {
+        await tManager.save(transaction);
+        await tManager.save(Invoice);
+      });
+    } catch (e) {
+      verifyResult = await paymentMethod.unPay(params.transactionKey);
+      throw new Error(`DATABASE_SAVING_FAILURE`);
+    }
+
     return verifyResult;
-}
+  }
+
+  /**
+   * load plan from DB.
+   * @param planId Plan id
+   */
+  private async loadPlan(planId: string) {
+    const plan = await this.manager.findOne(PaymentPlan, planId);
+
+    if (!plan) {
+      throw new Error('INVALID_PLAN_ID') as any;
+    }
+    return plan;
+  }
+
+  /**
+   * load user from db.
+   * @param userId
+   */
+  private async loadUser(userId: string) {
+    const udUser = await this.manager.findOne(User, userId);
+
+    if (!udUser) {
+      throw new Error('USER_NOT_FOUND');
+    }
+    return udUser;
+  }
+
+  /**
+   * loads the transaction from DB with transaction key.
+   * @param key transaction key.
+   */
+  private async loadTransaction(key: any) {
+    const transaction = await this.manager.findOne<ITransaction>(key);
+    if (!transaction) {
+      throw new Error('TRANSACTION_KEY_NOT_FOUND');
+    }
+
+    return transaction;
+  }
 }

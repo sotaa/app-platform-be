@@ -1,8 +1,10 @@
-import { IPaymentResult, IInvoice } from '../../../user-directory';
-import { IOnlinePaymentResult } from '..';
+import { IInvoice } from '../../../user-directory';
+import { IOnlinePaymentResult, IPaymentResult } from '..';
 import { IPayer } from '../payer.interface';
 
-export interface IPaymentMethod extends IPayer{}
+export interface IPaymentMethod extends IPayer{
+  unPay(key: string | number): Promise<IPaymentResult>;
+}
 
 export interface IOnlinePaymentMethod extends IPaymentMethod {
   providerName: string;
