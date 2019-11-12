@@ -1,9 +1,10 @@
 import { Controller, Route, Post, Get, Path, Body, BodyProp } from 'tsoa';
 import { injectable, inject } from 'inversify';
-import { TYPES, IUserService } from '../../libs/user-directory';
+import { IUserService } from '../../libs/user-directory';
 import { IAuthService, IAuthResult, IAuthData, ITokenPair } from '../../libs/identity/interfaces';
 import { BAD_REQUEST } from 'http-status-codes';
 import { User } from '../../libs/user-directory/classes/models/user.model';
+import { TYPES } from '../../ioc';
 @Route('auth')
 @injectable()
 export class AuthController extends Controller {

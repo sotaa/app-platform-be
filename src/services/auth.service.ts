@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { AuthService as IdentityAuthService } from '../libs/identity/typeorm';
-import { TYPES } from '../libs/user-directory';
 import { IIdentityConfig } from '../libs/identity/interfaces';
+import { TYPES } from '../ioc';
 
 @injectable()
 export class AuthService extends IdentityAuthService {

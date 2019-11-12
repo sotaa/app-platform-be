@@ -1,6 +1,5 @@
 import { Controller, Route, Request, Post, Get, Query, SuccessResponse } from 'tsoa';
 import { injectable, inject } from 'inversify';
-import { TYPES } from '../../libs/user-directory';
 import { Request as IRequest } from 'express';
 import { IIdentityUser } from '../../libs/identity/interfaces';
 import { BAD_REQUEST } from 'http-status-codes';
@@ -8,6 +7,7 @@ import { IPaymentResult } from '../../libs/payments';
 import { ITenant } from '../../libs/user-directory/interfaces/models/tenant.model';
 import { ZarinpalPaymentMethod } from '../../libs/payments/zarinpal';
 import { IPaymentService } from '../../libs/payments/lib/services/interfaces';
+import { TYPES } from '../../ioc';
 
 @Route('payment')
 @injectable()
