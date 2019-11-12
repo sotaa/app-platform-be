@@ -50,7 +50,7 @@ export class ZarinpalPaymentMethod implements IOnlinePaymentMethod {
     return { status: PaymentStatus.paid, transactionKey: params.Authority };
   }
 
-  unPay(authority: string): Promise<IPaymentResult> {
-    throw new Error('Method not implemented.');
+ async unPay(authority: string): Promise<IPaymentResult> {
+    return {status: PaymentStatus.incomplete , transactionKey: authority};
   }
 }
