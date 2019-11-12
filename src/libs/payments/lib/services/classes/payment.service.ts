@@ -93,7 +93,7 @@ export class PaymentService implements IPaymentService {
     }
 
     // commit the transaction in bank.
-    verifyResult = await paymentMethod.verifyTransaction(params);
+    verifyResult = await paymentMethod.verifyTransaction({...params, amount: transaction.invoice.payPrice});
     // didn't use await because it is not necessary to wait for result of this operation.
     this.manager.save(verifyResult);
 
