@@ -1,9 +1,8 @@
-import { Controller, Route, Get, Query , Post, Body, Delete, Put, Request } from 'tsoa';
+import { Controller, Route, Post, Body, Request } from 'tsoa';
 import { Request as IRequest} from 'express';
 import { IUser, IUserService } from '../../libs/user-directory/interfaces';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../ioc/types';
-import { IdentityUser } from '../../libs/identity/typeorm';
 import { IIdentityUser } from '../../libs/identity/interfaces';
 
 @Route('users')
