@@ -1,12 +1,13 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
-import  { Application, Invoice, PaymentPlan, User } from "../../libs/user-directory/typeorm";
+import  { Application, PaymentPlan, User } from "../../libs/user-directory/typeorm";
 import { IdentityUser, Token } from '../../libs/identity/typeorm';
+import { InvoiceEntity, TransactionEntity } from '../../libs/payments/typeorm';
 
 export async function initialize(config: DBConfiguration) {
  return await createConnection({
     ...config,
     logging: false,
-    entities: [Application, Invoice, PaymentPlan, Token, User, IdentityUser],
+    entities: [Application, PaymentPlan, Token, User, IdentityUser , InvoiceEntity, TransactionEntity],
     migrations: ['../migration/**/*.ts'],
     subscribers: ['../subscriber/**/*.ts']
   } as ConnectionOptions);
