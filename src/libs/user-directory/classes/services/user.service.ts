@@ -7,8 +7,7 @@ export class UserService implements IUserService {
 
     constructor(protected manager: EntityManager) {}
 
-    create(email: string, userId: string): Promise<IUser> {
-        const user = this.manager.create(User, {email, id: userId});
+    create(user: User): Promise<IUser> {
         return this.manager.save(user);
     }
 }

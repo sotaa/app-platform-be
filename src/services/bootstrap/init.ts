@@ -1,6 +1,6 @@
 import { createConnection, ConnectionOptions } from 'typeorm';
-import  { Application, Invoice, PaymentPlan, User } from "../entities";
-import { IdentityUser, Token } from '../../../identity/typeorm';
+import  { Application, Invoice, PaymentPlan, User } from "../../libs/user-directory/typeorm";
+import { IdentityUser, Token } from '../../libs/identity/typeorm';
 
 export async function initialize(config: DBConfiguration) {
  return await createConnection({

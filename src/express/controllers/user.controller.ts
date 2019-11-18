@@ -1,6 +1,10 @@
-/* import { Controller, Route, Get, Query , Post, Body, Delete, Put } from 'tsoa';
-import { IUser, IUserService, TYPES } from '../../libs/user-directory/interfaces';
+import { Controller, Route, Get, Query , Post, Body, Delete, Put, Request } from 'tsoa';
+import { Request as IRequest} from 'express';
+import { IUser, IUserService } from '../../libs/user-directory/interfaces';
 import { inject, injectable } from 'inversify';
+import { TYPES } from '../../ioc/types';
+import { IdentityUser } from '../../libs/identity/typeorm';
+import { IIdentityUser } from '../../libs/identity/interfaces';
 
 @Route('users')
 @injectable()
@@ -9,30 +13,31 @@ export class UserController extends Controller {
       super();
   }
   
-  @Get()
-  async list(@Query() filter?: any): Promise<IUser[]> {
-    return this.userService.find(filter);
-  }
+  // @Get()
+  // async list(@Query() filter?: any): Promise<IUser[]> {
+  //   return this.userService.find(filter);
+  // }
 
-  @Get('{id}')
-  async find(id: number): Promise<IUser> {
-    return this.userService.findById(id);
-  }
+  // @Get('{id}')
+  // async find(id: number): Promise<IUser> {
+  //   return this.userService.findById(id);
+  // }
   
   @Post()
-  async create(@Body() user: IUser): Promise<IUser> {
+  async create(@Body() user: IUser, @Request() req: IRequest): Promise<IUser> {
+    const idUser = (req.body as any).user as IIdentityUser;
+    user.id = idUser.id.toString();
     return await this.userService.create(user);
   }
 
 
-  @Put('{id}')
-  async update(id:number, @Body() user: IUser): Promise<any> {
-    return this.userService.update(id, user);
-  }
+  // @Put('{id}')
+  // async update(id:number, @Body() user: IUser): Promise<any> {
+  //   return this.userService.update(id, user);
+  // }
   
-  @Delete('{id}')
-   async delete(id: number): Promise<any> {
-     return this.userService.delete(id);
-   }
+  // @Delete('{id}')
+  //  async delete(id: number): Promise<any> {
+  //    return this.userService.delete(id);
+  //  }
 }
-*/

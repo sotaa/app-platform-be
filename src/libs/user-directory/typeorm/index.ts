@@ -1,3 +1,3 @@
 export *  from './services';
 export * from './entities';
-export * from './bootstrap';
+export * from '../../../services/bootstrap';

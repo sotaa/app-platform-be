@@ -14,14 +14,7 @@ export class AuthController extends Controller {
   @Post('register')
   public async register(@Body() authData: IAuthData): Promise<IAuthResult> {
     try {
-      // TODO: It should create both users in a single transaction.
-      /**
-       * Currently I don't know how to do it to make it available 
-       * to do to run something like saveChanges() in EntityFramework.
-       * But I will find out.
-       */
       const authResult = await this.authService.register(authData);
-      // await this.userService.create(new User(authData.username, authResult.user.id));
       return authResult;
     } catch (e) {
       this.setStatus(BAD_REQUEST);
