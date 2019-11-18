@@ -1,3 +1,3 @@
-export { Application } from './application.entity';
-export { PaymentPlan } from './payment-plan.entity';
-export { User } from './user.entity';
+export * from './application.entity';
+export * from './payment-plan.entity';
+export * from './user.entity';

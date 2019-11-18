@@ -1,12 +1,11 @@
 import { IPaymentService } from '../interfaces/payment.service.interface';
 import { IPaymentMethod, IPaymentResult, PaymentStatus } from '../..';
 import { EntityManager } from 'typeorm';
-import { PaymentPlan, User as UserDTO } from '../../../../user-directory/typeorm';
 import { Transaction, ITransaction } from '../../models/transaction.model';
 import { TransactionStatus } from '../../models/transaction.status';
 import { Invoice } from '../../../../user-directory/classes/invoice';
 import { IOnlinePaymentMethod } from '../../models/payment-method.model';
-import { User } from '../../../../user-directory/classes/models';
+import { User, PaymentPlan } from '../../../../user-directory/classes/models';
 
 export class PaymentService implements IPaymentService {
   constructor(private manager: EntityManager) {}
@@ -119,7 +118,7 @@ export class PaymentService implements IPaymentService {
    * @param userId
    */
   private async loadUser(userId: string) {
-    const user = await this.manager.findOne(UserDTO, userId);
+    const user = await this.manager.findOne(User, userId);
   
     if (!user) {
       throw new Error('USER_NOT_FOUND');

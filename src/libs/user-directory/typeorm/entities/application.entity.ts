@@ -1,15 +1,22 @@
-import { IEntity } from './interfaces/entity.interface';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { IApplication } from '../../interfaces/models/application.interface';
+import { EntitySchema } from 'typeorm';
+import { Application } from '../../classes/models';
 
-@Entity()
-export class Application implements IEntity, IApplication {
-  @PrimaryGeneratedColumn()
-  id?: number;
-  @Column()
-  name: string;
-  @Column()
-  url: string;
-  @Column()
-  isActive: boolean;
-}
+export const ApplicationEntity = new EntitySchema<Application>({
+  name: 'application',
+  columns: {
+    id: {
+      type: Number,
+      generated: 'increment',
+      primary: true
+    },
+    isActive: {
+      type: Boolean,
+      default: false
+    },
+    name: {
+      type: String,
+      nullable: false
+    },
+    url: { type: String, nullable: false }
+  }
+});

@@ -1,22 +1,41 @@
-import { IEntity } from './interfaces/entity.interface';
-import { Invoice } from '../../classes/models/invoice.model';
-import { OneToMany, PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
-import { IPaymentPlan } from '../../interfaces/models/payment-plan.interface';
+import { EntitySchema } from 'typeorm';
+import { PaymentPlan } from '../../classes/models/payment-plan.model';
 
-@Entity({name: 'plan'})
-export class PaymentPlan implements IEntity, IPaymentPlan {
-  @PrimaryGeneratedColumn()
-  id?: number;
-  @Column()
-  name: string;
-  @Column()
-  price: number;
-  @Column()
-  dateRange: number;
-  @Column()
-  isActive: boolean;
-  @Column()
-  description?: string;
-  @OneToMany(type => Invoice, invoice => invoice.plan)
-  invoices: Invoice[];
-}
+export const PaymentPlanEntity = new EntitySchema<PaymentPlan>({
+  name: 'plan',
+  columns: {
+    id: {
+      type: Number,
+      generated: 'increment',
+      primary: true
+    },
+    name: {
+      type: String,
+      nullable: false
+    },
+    price: {
+      type: Number,
+      nullable: false
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+      nullable: false
+    },
+    dateRange: {
+      type: Number,
+      default: 0,
+      nullable: false
+    },
+    description: {
+      type: String
+    }
+  },
+  relations: {
+    invoices: {
+      type: 'one-to-many',
+      target: 'invoice',
+      lazy: true
+    }
+  }
+});

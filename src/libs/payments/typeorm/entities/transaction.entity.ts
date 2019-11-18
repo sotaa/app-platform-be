@@ -7,6 +7,7 @@ export const TransactionEntity = new EntitySchema<Transaction>({
         transactionKey: {
             type: String,
             nullable: false,
+            primary: true,
             unique: true
         },
         status: {

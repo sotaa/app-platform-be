@@ -1,5 +1,5 @@
 import { IEntity } from '../../typeorm/entities/interfaces/entity.interface';
-import { PaymentPlan } from '../../typeorm/entities/payment-plan.entity';
+import { PaymentPlan } from './payment-plan.model';
 import { IInvoice } from '../../interfaces/models/invoice.interface';
 import { PaymentStatus } from '../../../payments';
 import { IUser } from '../..';

@@ -7,11 +7,12 @@ export const InvoiceEntity = new EntitySchema<Invoice>({
     columns: {
         id: {
             type: Number,
-            generated: 'increment'
+            generated: 'increment',
+            primary: true
         },
         createDate: {
-            type: 'date',
-            default: 'CURRENT_TIMESTAMP',
+            type: Date,
+            default: () => 'CURRENT_TIMESTAMP',
             nullable: false
         },
         payPrice: {
