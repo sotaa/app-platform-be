@@ -3,12 +3,11 @@ import { injectable, inject } from 'inversify';
 import { IUserService } from '../../libs/user-directory';
 import { IAuthService, IAuthResult, IAuthData, ITokenPair } from '../../libs/identity/interfaces';
 import { BAD_REQUEST } from 'http-status-codes';
-import { User } from '../../libs/user-directory/classes/models/user.model';
 import { TYPES } from '../../ioc/types';
 @Route('auth')
 @injectable()
 export class AuthController extends Controller {
-  constructor(@inject(TYPES.IAuthService) private authService: IAuthService, private userService: IUserService) {
+  constructor(@inject(TYPES.IAuthService) private authService: IAuthService, @inject(TYPES.IUserService) private userService: IUserService) {
     super();
   }
 
@@ -22,7 +21,7 @@ export class AuthController extends Controller {
        * But I will find out.
        */
       const authResult = await this.authService.register(authData);
-      await this.userService.create(new User(authData.username, authResult.user.id));
+      // await this.userService.create(new User(authData.username, authResult.user.id));
       return authResult;
     } catch (e) {
       this.setStatus(BAD_REQUEST);

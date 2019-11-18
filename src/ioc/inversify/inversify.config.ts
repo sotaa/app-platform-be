@@ -3,7 +3,8 @@ import {
   ApplicationService,
   PaymentPlanService,
   InvoiceService,
-  PaymentService
+  PaymentService,
+  UserService
 } from '../../services';
 
 import { PaymentPlansController, ApplicationController, AuthController, PaymentController } from '../../express/controllers';
@@ -25,6 +26,7 @@ iocContainer.bind(TYPES.IAuthService).to(AuthService).inSingletonScope();
 iocContainer.bind(TYPES.IIdentityConfig).toConstantValue(identityConfig);
 iocContainer.bind(TYPES.ITenant).toConstantValue(tenant);
 iocContainer.bind(TYPES.IPaymentService).to(PaymentService).inSingletonScope();
+iocContainer.bind(TYPES.IUserService).to(UserService).inSingletonScope();
 
 
 iocContainer.bind(PaymentPlansController).toSelf().inSingletonScope();
