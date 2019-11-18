@@ -1,10 +1,10 @@
-import { Invoice } from './invoice.entity';
-import { Column, Index, OneToMany, ChildEntity, PrimaryColumn, PrimaryGeneratedColumn, Entity } from 'typeorm';
+import { Invoice } from '../../classes/models/invoice.model';
+import { Column, Index, OneToMany, PrimaryColumn, Entity } from 'typeorm';
 import { IUserDTO } from '../../interfaces/models/user.interface';
 import { IEntity } from './interfaces/entity.interface';
 import { IInvoice } from '../..';
 
-@Entity()
+@Entity({name: 'user'})
 export class User implements IUserDTO, IEntity {
   @PrimaryColumn({ default: 'uuid_generate_v4()', unique: true })
   id: string;

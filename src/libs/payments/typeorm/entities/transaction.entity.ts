@@ -10,7 +10,7 @@ export const TransactionEntity = new EntitySchema<Transaction>({
             unique: true
         },
         status: {
-            type: Number,
+            type: 'enum',
             enum: TransactionStatus,
             nullable: false
         }
