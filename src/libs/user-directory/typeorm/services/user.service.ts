@@ -28,12 +28,12 @@ export class UserService implements IUserService{
     }
 
     find(condition?: object): Promise<IUser[]> {
-        return this.manager.find(User, condition);
+        return this.manager.find<IUser>(User, condition);
     }
     findById(id: string | number): Promise<IUser> {
-        return this.manager.findOne(User, id);
+        return this.manager.findOne<IUser>(User, id);
     }
     findByIds(ids: number[] | string[]): Promise<IUser[]> {
-        return this.manager.findByIds(User, ids);
+        return this.manager.findByIds<IUser>(User, ids);
     }
 }
