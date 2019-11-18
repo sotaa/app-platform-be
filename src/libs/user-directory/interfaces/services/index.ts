@@ -1,5 +1,5 @@
-export { ICRUDService } from './interfaces/crud-service.interface';
-export { IPaymentPlanService } from './interfaces/payment-plan-service.interface';
-export { IApplicationService } from './interfaces/application-service.interface';
-export { IInvoiceService } from './interfaces/invoice-service.interface';
-export { IUserService } from './interfaces/user-service.interface';
+export { ICRUDService } from './crud-service.interface';
+export { IPaymentPlanService } from './payment-plan-service.interface';
+export { IApplicationService } from './application-service.interface';
+export { IInvoiceService } from './invoice-service.interface';
+export { IUserService } from './user.service.interface';

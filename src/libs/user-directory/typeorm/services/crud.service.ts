@@ -1,4 +1,4 @@
-import { ICRUDService } from '../../interfaces/services/interfaces/crud-service.interface';
+import { ICRUDService } from '../../interfaces/services/crud-service.interface';
 import { Repository , FindConditions, DeleteResult } from 'typeorm';
 
 export abstract class CRUDService<T> implements ICRUDService<T> {
