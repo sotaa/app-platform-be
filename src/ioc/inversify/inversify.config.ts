@@ -1,4 +1,3 @@
-import { TYPES } from '../../libs/user-directory/interfaces';
 import { Container, inject, injectable } from 'inversify';
 import {
   ApplicationService,
@@ -10,6 +9,7 @@ import {
 import { PaymentPlansController, ApplicationController, AuthController, PaymentController } from '../../express/controllers';
 // import { UserController } from '../../express/controllers/user.controller';
 import { AuthService } from '../../services/auth.service';
+import { TYPES } from '../types';
 
 
 const identityConfig = require('../../config/identity.config.json');

@@ -7,8 +7,7 @@ import * as swaggerUi from 'swagger-ui-express';
 import { DBConfiguration, initializeDatabase, clean } from '../services';
 import { ILogger } from '../logger';
 import { logMiddleware, createAuthMiddleware } from './middlewares';
-import { iocContainer } from '../ioc';
-import { TYPES } from '../libs/user-directory';
+import { iocContainer, TYPES } from '../ioc';
 import { IIdentityConfig } from '../libs/identity/interfaces';
 
 export class UserDirectoryServer {

@@ -1,7 +1,7 @@
 import { Controller, Route, Get, Query , Post, Body, Delete, SuccessResponse, Put } from 'tsoa';
 import { IPaymentPlan, IPaymentPlanService } from '../../libs/user-directory/interfaces';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../ioc';
+import { TYPES } from '../../ioc/types';
 
 @Route('payment-plans')
 @injectable()

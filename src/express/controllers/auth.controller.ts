@@ -4,7 +4,7 @@ import { IUserService } from '../../libs/user-directory';
 import { IAuthService, IAuthResult, IAuthData, ITokenPair } from '../../libs/identity/interfaces';
 import { BAD_REQUEST } from 'http-status-codes';
 import { User } from '../../libs/user-directory/classes/models/user.model';
-import { TYPES } from '../../ioc';
+import { TYPES } from '../../ioc/types';
 @Route('auth')
 @injectable()
 export class AuthController extends Controller {

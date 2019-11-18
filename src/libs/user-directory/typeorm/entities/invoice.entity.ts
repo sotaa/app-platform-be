@@ -4,6 +4,7 @@ import { User } from './user.entity';
 import { PaymentPlan } from './payment-plan.entity';
 import { IInvoice } from '../../interfaces/models/invoice.interface';
 import { PaymentStatus } from '../../../payments';
+import { IUser } from '../..';
 
 @Entity()
 export class Invoice implements IEntity, IInvoice {
@@ -16,7 +17,7 @@ export class Invoice implements IEntity, IInvoice {
   @Column({type: 'enum' , enum: PaymentStatus})
   paymentStatus?: PaymentStatus;
   @ManyToOne(type => User, user => user.invoices)
-  user: User;
+  user: IUser;
   @ManyToOne(type => PaymentPlan, pp => pp.invoices)
   plan: PaymentPlan;
   @Column()

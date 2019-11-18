@@ -7,7 +7,7 @@ import { IPaymentResult } from '../../libs/payments';
 import { ITenant } from '../../libs/user-directory/interfaces/models/tenant.model';
 import { ZarinpalPaymentMethod } from '../../libs/payments/zarinpal';
 import { IPaymentService } from '../../libs/payments/lib/services/interfaces';
-import { TYPES } from '../../ioc';
+import { TYPES } from '../../ioc/types';
 
 @Route('payment')
 @injectable()
