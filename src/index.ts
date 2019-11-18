@@ -8,27 +8,26 @@ import { config as envConfig } from 'dotenv-flow';
 import { applicationLogger, requestLogger } from './logger/winston';
 
 async function createServer() {
+  const appLogger = console; // applicationLogger;
 
-const appLogger = console;// applicationLogger;
+  envConfig();
+  const config = extractConfig(process.env);
+  appLogger.info('userDirectory is using the following configurations:', config);
 
-envConfig();
-const config = extractConfig(process.env);
-appLogger.info('userDirectory is using the following configurations:', config);
+  const userDirectory = new UserDirectoryServer({ dbConfig: config.dbConfig, logger: appLogger as any });
 
-const userDirectory = new UserDirectoryServer({dbConfig: config.dbConfig, logger: appLogger as any});
+  /**
+   * Enable documentation on /docs route in development mode.
+   * Also we will log all incoming requests and outgoing responses on production server.
+   */
+  if (config.mode !== 'prod' && config.mode !== 'production') {
+    userDirectory.enableDocumentation('/docs');
+  } else {
+    userDirectory.enableRequestLogging(requestLogger as any);
+  }
 
-/**
- * Enable documentation on /docs route in development mode.
- * Also we will log all incoming requests and outgoing responses on production server.
- */
-if (config.mode !== 'prod' && config.mode !== 'production') {
-  userDirectory.enableDocumentation('/docs');
-} else {
-  userDirectory.enableRequestLogging(requestLogger as any);
-}
-
-/** Start the server */
-await userDirectory.start(config.port || 3000);
+  /** Start the server */
+  await userDirectory.start(config.port || 3000);
   /** Cleaning application for testing */
   if (config.mode === 'test') {
     await userDirectory.clean();
@@ -36,10 +35,10 @@ await userDirectory.start(config.port || 3000);
     userDirectory.app.emit('start test');
   }
 
-return userDirectory;
+  return userDirectory;
 }
 /**
- * We need to export the app for testing purposes.
+ * need to export the app for testing purposes.
  */
 export const userDirectory = createServer();
 
