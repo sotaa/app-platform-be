@@ -9,7 +9,7 @@ export interface IPaymentService {
    * @param paymentMethod the method that is responsible for payment process.
    * @param callbackUrl url that is suppose to verify the payment. it is for online payment methods.
    */
-    buy(planId: string, userId: string, paymentMethod: IPaymentMethod): Promise<IPaymentResult>;
+    buy(planId: string, userId: string, paymentMethod: IPaymentMethod, callbackUrl?: string): Promise<IPaymentResult>;
     
     /**
    * Verifies the payment.

@@ -126,10 +126,102 @@
 			"properties": {
 				"status": {
 					"$ref": "#/definitions/PaymentStatus"
+				},
+				"transactionKey": {
+					"additionalProperties": true,
+					"type": "object"
 				}
 			},
 			"required": [
-				"status"
+				"status",
+				"transactionKey"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"IUser": {
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"firstName": {
+					"type": "string",
+					"x-nullable": true
+				},
+				"lastName": {
+					"type": "string",
+					"x-nullable": true
+				},
+				"email": {
+					"type": "string"
+				},
+				"sex": {
+					"type": "string",
+					"enum": [
+						"male",
+						"female"
+					],
+					"x-nullable": true
+				},
+				"mobile": {
+					"type": "string",
+					"x-nullable": true
+				},
+				"expireDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				},
+				"registerDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				},
+				"invoices": {
+					"items": {
+						"$ref": "#/definitions/IInvoice"
+					},
+					"type": "array",
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"id",
+				"email"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"IInvoice": {
+			"properties": {
+				"user": {
+					"$ref": "#/definitions/IUser"
+				},
+				"plan": {
+					"$ref": "#/definitions/IPaymentPlan"
+				},
+				"payPrice": {
+					"type": "number",
+					"format": "double"
+				},
+				"createDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				},
+				"paymentStatus": {
+					"$ref": "#/definitions/PaymentStatus",
+					"x-nullable": true
+				},
+				"description": {
+					"type": "string",
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"user",
+				"plan",
+				"payPrice"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -574,12 +666,32 @@
 					}
 				},
 				"security": [],
+				"parameters": []
+			}
+		},
+		"/users": {
+			"post": {
+				"operationId": "Create",
+				"produces": [
+					"application/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"schema": {
+							"$ref": "#/definitions/IUser"
+						}
+					}
+				},
+				"security": [],
 				"parameters": [
 					{
-						"in": "query",
-						"name": "params",
+						"in": "body",
+						"name": "user",
 						"required": true,
-						"type": "string"
+						"schema": {
+							"$ref": "#/definitions/IUser"
+						}
 					}
 				]
 			}

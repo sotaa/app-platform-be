@@ -6,6 +6,7 @@ import { TransactionStatus } from '../../models/transaction.status';
 import { Invoice } from '../../../../user-directory/classes/invoice';
 import { IOnlinePaymentMethod } from '../../models/payment-method.model';
 import { User, PaymentPlan } from '../../../../user-directory/classes/models';
+import { IUser } from '../../../../user-directory';
 
 export class PaymentService implements IPaymentService {
   constructor(private manager: EntityManager) {}
@@ -30,7 +31,7 @@ export class PaymentService implements IPaymentService {
     const transaction = new Transaction(invoice, TransactionStatus.pending);
 
     if (callbackUrl) {
-      callbackUrl += callbackUrl + '?transactionKey=' + transaction.transactionKey;
+      callbackUrl += '?transactionKey=' + transaction.transactionKey;
     }
 
     let paymentResult = await paymentMethod.pay(invoice, callbackUrl);
@@ -42,12 +43,13 @@ export class PaymentService implements IPaymentService {
 
     try {
       await this.manager.transaction(async tManager => {
-        await tManager.save(invoice);
-        await tManager.save(transaction);
-        await tManager.save(user);
+        await tManager.save('invoice', invoice);
+        await tManager.save('transaction', transaction);
+        await tManager.save('user' , user);
       });
     } catch (e) {
       paymentResult = await paymentMethod.unPay(paymentResult.transactionKey);
+      console.log(e);
       throw new Error(`DATABASE_SAVING_FAILURE`);
     }
 
@@ -75,16 +77,16 @@ export class PaymentService implements IPaymentService {
     transaction.status = TransactionStatus.successful;
     transaction.invoice.paymentStatus = PaymentStatus.paid;
     // upgrade the user.
-    const user = await this.loadUser(transaction.invoice.user.id);
+    const user = User.create(transaction.invoice.user);
     user.upgrade(transaction.invoice.plan.dateRange);
 
     let verifyResult: IPaymentResult;
 
     try {
       await this.manager.transaction(async tManager => {
-        await tManager.save(user);
-        await tManager.save(transaction);
-        await tManager.save(Invoice);
+        await tManager.save('invoice', transaction.invoice);
+        await tManager.save('transaction', transaction);
+        await tManager.save('user' , user);
       });
     } catch (e) {
       verifyResult = await paymentMethod.unPay(params.transactionKey);
@@ -94,7 +96,7 @@ export class PaymentService implements IPaymentService {
     // commit the transaction in bank.
     verifyResult = await paymentMethod.verifyTransaction({...params, amount: transaction.invoice.payPrice});
     // didn't use await because it is not necessary to wait for result of this operation.
-    this.manager.save(verifyResult);
+    this.manager.save('payment-result', {...verifyResult, thirdPartyData: JSON.stringify(params)});
 
 
     return verifyResult;
@@ -105,7 +107,7 @@ export class PaymentService implements IPaymentService {
    * @param planId Plan id
    */
   private async loadPlan(planId: string) {
-    const plan = await this.manager.findOne(PaymentPlan, planId);
+    const plan = await this.manager.findOne<PaymentPlan>('plan', planId);
 
     if (!plan) {
       throw new Error('INVALID_PLAN_ID') as any;
@@ -118,7 +120,7 @@ export class PaymentService implements IPaymentService {
    * @param userId
    */
   private async loadUser(userId: string) {
-    const user = await this.manager.findOne(User, userId);
+    const user = await this.manager.findOne<IUser>('user', userId);
   
     if (!user) {
       throw new Error('USER_NOT_FOUND');
@@ -132,7 +134,7 @@ export class PaymentService implements IPaymentService {
    * @param key transaction key.
    */
   private async loadTransaction(key: any) {
-    const transaction = await this.manager.findOne<ITransaction>(key);
+    const transaction = await this.manager.findOne<ITransaction>('transaction' ,{where: {transactionKey: key}});
     if (!transaction) {
       throw new Error('TRANSACTION_KEY_NOT_FOUND');
     }

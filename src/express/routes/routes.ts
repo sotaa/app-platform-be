@@ -11,6 +11,8 @@ import { ApplicationController } from './../controllers/application.controller';
 import { AuthController } from './../controllers/auth.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { PaymentController } from './../controllers/payment.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { UserController } from './../controllers/user.controller';
 import * as express from 'express';
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -76,6 +78,36 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "status": { "ref": "PaymentStatus", "required": true },
+            "transactionKey": { "dataType": "any", "required": true },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IUser": {
+        "dataType": "refObject",
+        "properties": {
+            "id": { "dataType": "string", "required": true },
+            "firstName": { "dataType": "string" },
+            "lastName": { "dataType": "string" },
+            "email": { "dataType": "string", "required": true },
+            "sex": { "dataType": "enum", "enums": ["male", "female"] },
+            "mobile": { "dataType": "string" },
+            "expireDate": { "dataType": "datetime" },
+            "registerDate": { "dataType": "datetime" },
+            "invoices": { "dataType": "array", "array": { "ref": "IInvoice" } },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IInvoice": {
+        "dataType": "refObject",
+        "properties": {
+            "user": { "ref": "IUser", "required": true },
+            "plan": { "ref": "IPaymentPlan", "required": true },
+            "payPrice": { "dataType": "double", "required": true },
+            "createDate": { "dataType": "datetime" },
+            "paymentStatus": { "ref": "PaymentStatus" },
+            "description": { "dataType": "string" },
         },
         "additionalProperties": false,
     },
@@ -471,7 +503,6 @@ export function RegisterRoutes(app: express.Express) {
     app.get('/payment/verify',
         function(request: any, response: any, next: any) {
             const args = {
-                params: { "in": "query", "name": "params", "required": true, "dataType": "any" },
                 req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
             };
 
@@ -491,6 +522,32 @@ export function RegisterRoutes(app: express.Express) {
 
 
             const promise = controller.verify.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, next);
+        });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.post('/users',
+        function(request: any, response: any, next: any) {
+            const args = {
+                user: { "in": "body", "name": "user", "required": true, "ref": "IUser" },
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = iocContainer.get<UserController>(UserController);
+            if (typeof controller['setStatus'] === 'function') {
+                (<any>controller).setStatus(undefined);
+            }
+
+
+            const promise = controller.create.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, next);
         });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

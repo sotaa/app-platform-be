@@ -28,7 +28,7 @@ export const InvoiceEntity = new EntitySchema<Invoice>({
     },
     relations: {
         plan: {
-            type: 'one-to-many',
+            type: 'many-to-one',
             eager: true,
             target: 'plan'
         },

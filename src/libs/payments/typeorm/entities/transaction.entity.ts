@@ -21,7 +21,7 @@ export const TransactionEntity = new EntitySchema<Transaction>({
             type: 'many-to-one',
             target: 'invoice',
             nullable: false,
-            lazy: true
+            eager: true
         }
     }
     
