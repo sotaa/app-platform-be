@@ -63,7 +63,9 @@ export class PaymentService implements IPaymentService {
    */
   async verify(params: any, paymentMethod: IOnlinePaymentMethod): Promise<IPaymentResult> {
     const transaction = await this.loadTransaction(params.transactionKey);
-
+    if(transaction.status !== TransactionStatus.pending) {
+      throw new Error('TRANSACTION_ALREADY_PROCESSED')
+    }
     /**
      * handle transaction failure.
      */

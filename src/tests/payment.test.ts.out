@@ -1,0 +1,61 @@
+import 'mocha';
+import { userDirectory as UDPromise } from '..';
+import * as chai from 'chai';
+import chaiHttp = require('chai-http');
+import { Express } from 'express';
+import { PaymentPlan } from '../libs/user-directory/classes/models';
+import { IAuthResult } from '../libs/identity/interfaces';
+
+chai.use(chaiHttp);
+let should = chai.should();
+const expect = chai.expect;
+let userDirectory: Express;
+let plan: PaymentPlan;
+let authData: IAuthResult;
+
+async function createPlan() {
+  return (
+    await chai
+      .request(userDirectory)
+      .post('/payment-plans')
+      .send({
+        name: 'string',
+        price: 0,
+        dateRange: 0,
+        isActive: true,
+        description: 'string'
+      })
+  ).body;
+}
+
+async function registerUser() {
+  const regResult = await chai
+    .request(userDirectory)
+    .post('/auth/register')
+    .send({ username: 'paymentUser@gmail.com', password: 'password' });
+
+  return regResult.body;
+}
+
+before(async () => {
+  userDirectory = (await UDPromise).app;
+  plan = await createPlan();
+  authData = await registerUser();
+});
+
+describe('Payments', () => {
+  describe('Buy a plan', () => {
+    it('Should return proper online payment result', async () => {
+      const result = await chai
+        .request(userDirectory)
+        .post('/payment/buy/' + plan.id)
+        .set({ Authorization: 'Bearer ' + authData.token })
+        .send({});
+      expect(result.status).eql(200);
+      expect(result.body.completionEndpoint).not.undefined;
+      result.body.completionEndpoint.should.be.string;
+      expect(result.body.status).equal(0);
+      expect(result.body.transactionKey).not.empty;
+    });
+  });
+});

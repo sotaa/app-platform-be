@@ -23,7 +23,7 @@ export class PaymentController extends Controller {
   async buy(planId: string, @Request() req: IRequest): Promise<IPaymentResult> {
     const verifyUrl = req.protocol.concat(
       '://',
-      req.hostname.concat(req.host === 'localhost' ? ':3000' : ''),
+      req.hostname.concat(req.hostname === 'localhost' ? ':3000' : ''),
       '/payment/verify'
     );
 
