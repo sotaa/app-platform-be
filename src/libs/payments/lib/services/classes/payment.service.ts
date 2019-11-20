@@ -7,6 +7,13 @@ import { Invoice } from '../../../../user-directory/classes/invoice';
 import { IOnlinePaymentMethod } from '../../models/payment-method.model';
 import { User, PaymentPlan } from '../../../../user-directory/classes/models';
 import { IUser } from '../../../../user-directory';
+import {
+  TransactionProcessedError,
+  DatabaseSavingError,
+  InvalidPlanIdError,
+  UserNotFoundError,
+  TransactionKeyNotFoundError
+} from '../../models/errors';
 
 export class PaymentService implements IPaymentService {
   constructor(private manager: EntityManager) {}
@@ -45,12 +52,12 @@ export class PaymentService implements IPaymentService {
       await this.manager.transaction(async tManager => {
         await tManager.save('invoice', invoice);
         await tManager.save('transaction', transaction);
-        await tManager.save('user' , user);
+        await tManager.save('user', user);
       });
     } catch (e) {
       paymentResult = await paymentMethod.unPay(paymentResult.transactionKey);
       console.log(e);
-      throw new Error(`DATABASE_SAVING_FAILURE`);
+      throw new DatabaseSavingError();
     }
 
     return paymentResult;
@@ -63,8 +70,8 @@ export class PaymentService implements IPaymentService {
    */
   async verify(params: any, paymentMethod: IOnlinePaymentMethod): Promise<IPaymentResult> {
     const transaction = await this.loadTransaction(params.transactionKey);
-    if(transaction.status !== TransactionStatus.pending) {
-      throw new Error('TRANSACTION_ALREADY_PROCESSED')
+    if (transaction.status !== TransactionStatus.pending) {
+      throw new TransactionProcessedError();
     }
     /**
      * handle transaction failure.
@@ -88,18 +95,17 @@ export class PaymentService implements IPaymentService {
       await this.manager.transaction(async tManager => {
         await tManager.save('invoice', transaction.invoice);
         await tManager.save('transaction', transaction);
-        await tManager.save('user' , user);
+        await tManager.save('user', user);
       });
     } catch (e) {
       verifyResult = await paymentMethod.unPay(params.transactionKey);
-      throw new Error(`DATABASE_SAVING_FAILURE`);
+      throw new DatabaseSavingError();
     }
 
     // commit the transaction in bank.
-    verifyResult = await paymentMethod.verifyTransaction({...params, amount: transaction.invoice.payPrice});
+    verifyResult = await paymentMethod.verifyTransaction({ ...params, amount: transaction.invoice.payPrice });
     // didn't use await because it is not necessary to wait for result of this operation.
-    this.manager.save('payment-result', {...verifyResult, thirdPartyData: JSON.stringify(params)});
-
+    this.manager.save('payment-result', { ...verifyResult, thirdPartyData: JSON.stringify(params) });
 
     return verifyResult;
   }
@@ -112,7 +118,7 @@ export class PaymentService implements IPaymentService {
     const plan = await this.manager.findOne<PaymentPlan>('plan', planId);
 
     if (!plan) {
-      throw new Error('INVALID_PLAN_ID') as any;
+      throw new InvalidPlanIdError();
     }
     return plan;
   }
@@ -123,11 +129,11 @@ export class PaymentService implements IPaymentService {
    */
   private async loadUser(userId: string) {
     const user = await this.manager.findOne<IUser>('user', userId);
-  
+
     if (!user) {
-      throw new Error('USER_NOT_FOUND');
+      throw new UserNotFoundError();
     }
-  
+
     return User.create(user);
   }
 
@@ -136,9 +142,9 @@ export class PaymentService implements IPaymentService {
    * @param key transaction key.
    */
   private async loadTransaction(key: any) {
-    const transaction = await this.manager.findOne<ITransaction>('transaction' ,{where: {transactionKey: key}});
+    const transaction = await this.manager.findOne<ITransaction>('transaction', { where: { transactionKey: key } });
     if (!transaction) {
-      throw new Error('TRANSACTION_KEY_NOT_FOUND');
+      throw new TransactionKeyNotFoundError();
     }
 
     return transaction;
