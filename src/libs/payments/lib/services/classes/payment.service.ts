@@ -1,11 +1,7 @@
 import { IPaymentService } from '../interfaces/payment.service.interface';
-import { IPaymentMethod, IPaymentResult, PaymentStatus } from '../..';
+import { IPaymentMethod, IPaymentResult, PaymentStatus, Invoice } from '../..';
 import { EntityManager } from 'typeorm';
-import { Transaction, ITransaction } from '../../models/transaction.model';
-import { TransactionStatus } from '../../models/transaction.status';
-import { Invoice } from '../../../../user-directory/classes/invoice';
-import { IOnlinePaymentMethod } from '../../models/payment-method.model';
-import { User, PaymentPlan } from '../../../../user-directory/classes/models';
+import { User } from '../../../../user-directory/classes';
 import { IUser } from '../../../../user-directory';
 import {
   TransactionProcessedError,
@@ -14,6 +10,7 @@ import {
   UserNotFoundError,
   TransactionKeyNotFoundError
 } from '../../models/errors';
+import { PaymentPlan, Transaction, TransactionStatus, IOnlinePaymentMethod, ITransaction } from '../../models';
 
 export class PaymentService implements IPaymentService {
   constructor(private manager: EntityManager) {}

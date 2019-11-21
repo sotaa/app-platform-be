@@ -1,9 +1,9 @@
 import { IPaymentPlan } from './payment-plan.interface';
-import { IUser } from './user.interface';
-import { PaymentStatus } from '../../../payments/lib/models/payment-status.type';
+import { PaymentStatus } from './models/payment-status.type';
+import { IInvoiceOwner } from './invoice-owner.interface';
 
 export interface IInvoice {
-  user: IUser;
+  user: IInvoiceOwner;
   plan: IPaymentPlan;
   payPrice: number;
   createDate?: Date;

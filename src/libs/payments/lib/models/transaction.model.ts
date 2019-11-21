@@ -1,6 +1,6 @@
-import { IInvoice } from '../../../user-directory';
 import { TransactionStatus } from './transaction.status';
 import { TransactionKeyGenerator } from './transaction-key-generator.model';
+import { IInvoice } from '..';
 
 export interface ITransaction {
   status: TransactionStatus;

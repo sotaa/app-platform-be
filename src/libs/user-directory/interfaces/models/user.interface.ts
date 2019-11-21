@@ -1,4 +1,4 @@
-import { IInvoice } from './invoice.interface';
+import { IInvoice } from '../../../payments/lib/invoice.interface';
 
 export interface IUserBO {
   upgrade(days: number): IUserBO;

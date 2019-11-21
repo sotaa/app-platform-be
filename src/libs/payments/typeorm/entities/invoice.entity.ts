@@ -1,6 +1,5 @@
 import { EntitySchema } from "typeorm";
-import { PaymentStatus } from "../../lib";
-import { Invoice } from "../../../user-directory/classes/models";
+import { PaymentStatus, Invoice } from "../../lib";
 
 export const InvoiceEntity = new EntitySchema<Invoice>({
     name: 'invoice',

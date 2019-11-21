@@ -1,5 +1,5 @@
 import { EntitySchema } from 'typeorm';
-import { PaymentPlan } from '../../classes/models/payment-plan.model';
+import { PaymentPlan } from '../../lib/models/payment-plan.model';
 
 export const PaymentPlanEntity = new EntitySchema<PaymentPlan>({
   name: 'plan',

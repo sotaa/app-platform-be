@@ -1,5 +1,4 @@
-import { IOnlinePaymentMethod, IPaymentResult, IOnlinePaymentResult, PaymentStatus } from '../lib';
-import { IInvoice } from '../../user-directory';
+import { IOnlinePaymentMethod, IPaymentResult, IOnlinePaymentResult, PaymentStatus, IInvoice } from '../lib';
 
 const zPal = require('zarinpal-checkout');
 

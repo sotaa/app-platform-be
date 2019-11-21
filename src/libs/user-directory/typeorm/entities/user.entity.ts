@@ -1,6 +1,6 @@
 import { EntitySchema } from 'typeorm';
 import { User } from '../../classes/models';
-import { v4 } from 'uuid';
+
 export const UserEntity = new EntitySchema<User>({
   name: 'user',
   columns: {

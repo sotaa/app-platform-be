@@ -1,8 +1,9 @@
-import { IInvoice, IUser, IUserDTO } from '../../interfaces';
+import { IUser, IUserDTO } from '../../interfaces';
 import { addDays, subtract } from 'date-and-time';
 import { v1 } from 'uuid';
+import { IInvoiceOwner, IInvoice } from '../../../payments';
 
-export class User implements IUser {
+export class User implements IUser , IInvoiceOwner{
   id: string;
   firstName?: string;
   lastName?: string;
@@ -11,7 +12,7 @@ export class User implements IUser {
   mobile?: string;
   expireDate?: Date;
   registerDate?: Date;
-  invoices?: IInvoice[];
+  invoices: IInvoice[];
   /**
    * User Model
    * @param email user email
