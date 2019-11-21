@@ -1,6 +1,8 @@
 import { IToken, IIdentityUser, TokenType } from '../interfaces';
 
-export class Token implements IToken{
+export class Token implements IToken {
+  id?: string;
+
   constructor(public type: TokenType, public value: string, public user: IIdentityUser) {}
 }
 

@@ -1,14 +1,10 @@
-import { IAuthService, IAuthData, IAuthResult, ITokenPair } from '../../interfaces';
+import { IAuthService, IAuthData, IAuthResult, ITokenPair, IIdentityConfig, IIdentityUser } from '../../interfaces';
 import { EntityManager } from 'typeorm';
 import { AuthResult } from '../../classes/auth-result.model';
-import { IIdentityConfig } from '../../interfaces/models/config.interface';
 import { compare, hash } from '../../helpers/crypto';
 import { WrongPasswordError, UserNameNotFoundError, InvalidTokenError } from '../../classes/errors/identity-errors';
 import { ITokenManager } from '../../helpers/token.manager';
-import { IdentityUser, Token } from '../entities';
-import { RefreshToken, AccessToken } from '../../classes/tokens';
-import { AuthDataValidator } from '../../classes/validators';
-import { RegexValidator } from '../../classes/validators/regex.validator';
+import { AuthDataValidator, RegexValidator, IdentityUser, Token, AccessToken, RefreshToken } from '../..';
 
 export class AuthService implements IAuthService {
   constructor(
@@ -19,7 +15,7 @@ export class AuthService implements IAuthService {
 
   async register(authData: IAuthData): Promise<IAuthResult> {
     const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator(), username =>
-      this.manager.findOne(IdentityUser, { username })
+      this.manager.findOne<IdentityUser>('identity_user', { username })
     );
     const validationResult = await validator.validate(authData);
 
@@ -28,14 +24,11 @@ export class AuthService implements IAuthService {
     }
 
     const hashedPassword = await hash(authData.password);
-    let user = this.manager.create(IdentityUser, {
-      username: authData.username,
-      password: hashedPassword
-    });
+    let user = new IdentityUser(authData.username, hashedPassword);
     let result;
 
     await this.manager.transaction(async transactionEntityManager => {
-      await this.manager.save(user);
+      await this.manager.save('identity_user' , user);
       result = this.generateAuthResult(user);
       await this.saveUserTokens(transactionEntityManager, user, result);
     });
@@ -43,7 +36,7 @@ export class AuthService implements IAuthService {
   }
 
   async login(authData: IAuthData): Promise<IAuthResult> {
-    let _user = await this.manager.findOne(IdentityUser, {
+    let _user = await this.manager.findOne<IdentityUser>('identity_user', {
       username: authData.username
     });
     if (!_user) {
@@ -86,15 +79,15 @@ export class AuthService implements IAuthService {
     return result;
   }
 
-  private async saveUserTokens(manager: EntityManager, _user: IdentityUser, result: ITokenPair) {
-    const accessToken = manager.create(Token, new AccessToken(result.token, _user));
-    const refreshToken = manager.create(Token, new RefreshToken(result.refreshToken, _user));
+  private async saveUserTokens(manager: EntityManager, _user: IIdentityUser, result: ITokenPair) {
+    const accessToken = new AccessToken(result.token, _user);
+    const refreshToken = new RefreshToken(result.refreshToken, _user);
 
-    await manager.save(accessToken as Token);
-    await manager.save(refreshToken as Token);
+    await manager.save('token' ,accessToken);
+    await manager.save('token', refreshToken);
   }
 
-  private generateAuthResult(_user: IdentityUser) {
+  private generateAuthResult(_user: IIdentityUser) {
     const result = new AuthResult();
 
     /** This user object will be inserted to token and result as user data */

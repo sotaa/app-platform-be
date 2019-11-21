@@ -1,18 +1,30 @@
-import { IIdentityUser, IToken } from '../../interfaces';
-import { Entity, Column, OneToMany, TableInheritance, PrimaryGeneratedColumn, Index } from 'typeorm';
-import { Token } from './token.entity';
-import { IEntity } from '../interfaces';
+import { EntitySchema } from "typeorm";
+import { IdentityUser } from "../../classes/identity-user.model";
 
-@Entity()
-@TableInheritance({column: {type: 'nvarchar', name: 'type'}})
-export class IdentityUser implements IEntity, IIdentityUser {
-  @PrimaryGeneratedColumn()
-  id?: string;
-  @Column()
-  @Index({unique: true})
-  username: string;
-  @Column()
-  password: string;
-  @OneToMany(type => Token, token => token.user, {cascade: ['insert', 'remove', 'update']})
-  tokens: IToken[];
-}
+export const IdentityUserEntity = new EntitySchema<IdentityUser>({
+  name: 'identity_user',
+  columns: {
+    id: {
+      type: Number,
+      generated: 'increment',
+      primary: true
+    },
+    password: {
+      type: String,
+      nullable: false
+    },
+    username: {
+      type: String,
+      nullable: false,
+      unique: true
+    }
+  },
+  relations: {
+    tokens: {
+      type: 'one-to-many',
+      target: 'token',
+      inverseSide: 'user',
+      eager: false
+    }
+  }
+});
