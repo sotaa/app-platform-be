@@ -9,6 +9,7 @@ import { ILogger } from '../logger';
 import { logMiddleware, createAuthMiddleware } from './middlewares';
 import { iocContainer, TYPES } from '../ioc';
 import { IIdentityConfig } from '../libs/identity/interfaces';
+import { AUTHENTICATED_ROUTES } from './routes/authenticated-routes.const';
 
 export class UserDirectoryServer {
   app: express.Express;
@@ -22,8 +23,7 @@ export class UserDirectoryServer {
   private async initialize() {
     this.app.use(express.json());
     this.handleUncaughtExceptions();
-    // TODO: this shit should be somewhere to make sense. it's here now to make the app works.
-    this.app.use(createAuthMiddleware(iocContainer.get<IIdentityConfig>(TYPES.IIdentityConfig).secretKey))
+    this.secure(AUTHENTICATED_ROUTES);
     RegisterRoutes(this.app);
   }
   
@@ -56,6 +56,13 @@ export class UserDirectoryServer {
     process.on('unhandledRejection' , this.logger.error.bind(this) );
     process.on('uncaughtException' , this.logger.error.bind(this));
     process.on('warning', this.logger.warn.bind(this))
+  }
+
+  secure(routes: string[]) {
+    const authMiddleware = createAuthMiddleware(iocContainer.get<IIdentityConfig>(TYPES.IIdentityConfig).secretKey);
+    for(let route of routes) {
+      this.app.use(route, authMiddleware);
+    }
   }
 
   public async start(port: string | number) {
