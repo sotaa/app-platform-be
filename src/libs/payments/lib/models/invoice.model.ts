@@ -1,5 +1,6 @@
-import { PaymentStatus, IPaymentPlan, IInvoice } from '../..';
-import { IInvoiceOwner } from '../invoice-owner.interface';
+import { IInvoice, IInvoiceOwner, IPaymentPlan } from "..";
+import { PaymentStatus } from ".";
+
 
 export class Invoice implements IInvoice {
   id: number;

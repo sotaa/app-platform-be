@@ -1,5 +1,4 @@
-import { IInvoice } from '../../../user-directory';
-import { IOnlinePaymentResult, IPaymentResult } from '..';
+import { IOnlinePaymentResult, IPaymentResult, IInvoice } from '..';
 import { IPayer } from '../payer.interface';
 
 export interface IPaymentMethod extends IPayer{

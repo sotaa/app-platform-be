@@ -1,6 +1,4 @@
-import { IPaymentPlan } from './payment-plan.interface';
-import { PaymentStatus } from './models/payment-status.type';
-import { IInvoiceOwner } from './invoice-owner.interface';
+import { IInvoiceOwner, IPaymentPlan, PaymentStatus } from ".";
 
 export interface IInvoice {
   user: IInvoiceOwner;
