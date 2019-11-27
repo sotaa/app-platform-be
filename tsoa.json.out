@@ -1,0 +1,13 @@
+{
+    "swagger": {
+        "outputDirectory": ".",
+        "entryFile": "./src/index.ts",
+        "noImplicitAdditionalProperties": "silently-remove-extras"
+    },
+    "routes": {
+        "basePath": "/",
+        "entryFile": "./src/index.ts",
+        "routesDir": "./src/express/routes",
+        "iocModule": "./src/ioc"
+    }
+}

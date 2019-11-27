@@ -130,11 +130,68 @@
 				"transactionKey": {
 					"additionalProperties": true,
 					"type": "object"
+				},
+				"thirdPartyData": {
+					"type": "string",
+					"x-nullable": true
 				}
 			},
 			"required": [
 				"status",
 				"transactionKey"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"IInvoice": {
+			"properties": {
+				"user": {
+					"$ref": "#/definitions/IInvoiceOwner"
+				},
+				"plan": {
+					"$ref": "#/definitions/IPaymentPlan"
+				},
+				"payPrice": {
+					"type": "number",
+					"format": "double"
+				},
+				"createDate": {
+					"type": "string",
+					"format": "date-time",
+					"x-nullable": true
+				},
+				"paymentStatus": {
+					"$ref": "#/definitions/PaymentStatus",
+					"x-nullable": true
+				},
+				"description": {
+					"type": "string",
+					"x-nullable": true
+				}
+			},
+			"required": [
+				"user",
+				"plan",
+				"payPrice"
+			],
+			"type": "object",
+			"additionalProperties": false
+		},
+		"IInvoiceOwner": {
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"invoices": {
+					"items": {
+						"$ref": "#/definitions/IInvoice"
+					},
+					"type": "array"
+				}
+			},
+			"required": [
+				"id",
+				"invoices"
 			],
 			"type": "object",
 			"additionalProperties": false
@@ -188,40 +245,6 @@
 			"required": [
 				"id",
 				"email"
-			],
-			"type": "object",
-			"additionalProperties": false
-		},
-		"IInvoice": {
-			"properties": {
-				"user": {
-					"$ref": "#/definitions/IUser"
-				},
-				"plan": {
-					"$ref": "#/definitions/IPaymentPlan"
-				},
-				"payPrice": {
-					"type": "number",
-					"format": "double"
-				},
-				"createDate": {
-					"type": "string",
-					"format": "date-time",
-					"x-nullable": true
-				},
-				"paymentStatus": {
-					"$ref": "#/definitions/PaymentStatus",
-					"x-nullable": true
-				},
-				"description": {
-					"type": "string",
-					"x-nullable": true
-				}
-			},
-			"required": [
-				"user",
-				"plan",
-				"payPrice"
 			],
 			"type": "object",
 			"additionalProperties": false

@@ -10,13 +10,14 @@ import { logMiddleware, createAuthMiddleware } from './middlewares';
 import { iocContainer, TYPES } from '../ioc';
 import { IIdentityConfig } from '../libs/identity/interfaces';
 import { AUTHENTICATED_ROUTES } from './routes/authenticated-routes.const';
+import { secure, IRouteConfig } from '../libs/guard/express';
 
 export class UserDirectoryServer {
   app: express.Express;
   protected logger: ILogger;
-  
+
   constructor(protected config: UserDirectoryConfiguration) {
-    this.logger = config.logger || console as any;
+    this.logger = config.logger || (console as any);
     this.app = express();
   }
 
@@ -26,7 +27,7 @@ export class UserDirectoryServer {
     this.secure(AUTHENTICATED_ROUTES);
     RegisterRoutes(this.app);
   }
-  
+
   /**
    * Log all incoming requests and outgoing response.
    */
@@ -40,7 +41,7 @@ export class UserDirectoryServer {
    */
   public clean() {
     // TODO: Uploaded file cleaner added.
-   return clean();
+    return clean();
   }
 
   public enableDocumentation(url: string) {
@@ -53,26 +54,27 @@ export class UserDirectoryServer {
   }
 
   private handleUncaughtExceptions() {
-    process.on('unhandledRejection' , this.logger.error.bind(this) );
-    process.on('uncaughtException' , this.logger.error.bind(this));
-    process.on('warning', this.logger.warn.bind(this))
+    process.on('unhandledRejection', this.logger.error.bind(this));
+    process.on('uncaughtException', this.logger.error.bind(this));
+    process.on('warning', this.logger.warn.bind(this));
   }
 
-  secure(routes: string[]) {
+  secure(routes: IRouteConfig[]) {
     const authMiddleware = createAuthMiddleware(iocContainer.get<IIdentityConfig>(TYPES.IIdentityConfig).secretKey);
-    for(let route of routes) {
-      this.app.use(route, authMiddleware);
+    for (let route of routes) {
+      this.app.use(route.path, authMiddleware);
     }
+    secure(this.app, routes);
   }
 
   public async start(port: string | number) {
     this.initialize();
-    await initializeDatabase(this.config.dbConfig);
-    this.logger.info(`Connected to database ${this.config.dbConfig.database} on server ${this.config.dbConfig.host}`)
+    initializeDatabase(this.config.dbConfig).then(() =>
+      this.logger.info(`Connected to database ${this.config.dbConfig.database} on server ${this.config.dbConfig.host}`)
+    );
     this.app.listen(port, () => this.logger.info(`User Directory is started on port ${port}`));
   }
 }
-
 
 export interface UserDirectoryConfiguration {
   logger?: ILogger;

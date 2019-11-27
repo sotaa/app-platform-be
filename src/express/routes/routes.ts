@@ -79,6 +79,29 @@ const models: TsoaRoute.Models = {
         "properties": {
             "status": { "ref": "PaymentStatus", "required": true },
             "transactionKey": { "dataType": "any", "required": true },
+            "thirdPartyData": { "dataType": "string" },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IInvoice": {
+        "dataType": "refObject",
+        "properties": {
+            "user": { "ref": "IInvoiceOwner", "required": true },
+            "plan": { "ref": "IPaymentPlan", "required": true },
+            "payPrice": { "dataType": "double", "required": true },
+            "createDate": { "dataType": "datetime" },
+            "paymentStatus": { "ref": "PaymentStatus" },
+            "description": { "dataType": "string" },
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IInvoiceOwner": {
+        "dataType": "refObject",
+        "properties": {
+            "id": { "dataType": "string", "required": true },
+            "invoices": { "dataType": "array", "array": { "ref": "IInvoice" }, "required": true },
         },
         "additionalProperties": false,
     },
@@ -95,19 +118,6 @@ const models: TsoaRoute.Models = {
             "expireDate": { "dataType": "datetime" },
             "registerDate": { "dataType": "datetime" },
             "invoices": { "dataType": "array", "array": { "ref": "IInvoice" } },
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IInvoice": {
-        "dataType": "refObject",
-        "properties": {
-            "user": { "ref": "IUser", "required": true },
-            "plan": { "ref": "IPaymentPlan", "required": true },
-            "payPrice": { "dataType": "double", "required": true },
-            "createDate": { "dataType": "datetime" },
-            "paymentStatus": { "ref": "PaymentStatus" },
-            "description": { "dataType": "string" },
         },
         "additionalProperties": false,
     },
@@ -251,6 +261,7 @@ export function RegisterRoutes(app: express.Express) {
     app.get('/applications',
         function(request: any, response: any, next: any) {
             const args = {
+                req: { "in": "request", "name": "req", "required": true, "dataType": "object" },
                 filter: { "in": "query", "name": "filter", "dataType": "any" },
             };
 
