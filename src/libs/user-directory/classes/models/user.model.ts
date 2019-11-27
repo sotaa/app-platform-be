@@ -2,8 +2,10 @@ import { IUser, IUserDTO } from '../../interfaces';
 import { addDays, subtract } from 'date-and-time';
 import { v1 } from 'uuid';
 import { IInvoiceOwner, IInvoice } from '../../../payments';
+import { IGuardUser, IRole } from '../../../guard';
 
-export class User implements IUser , IInvoiceOwner{
+export class User implements IUser , IGuardUser, IInvoiceOwner{
+  roles: IRole[];
   id: string;
   firstName?: string;
   lastName?: string;

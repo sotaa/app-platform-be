@@ -39,6 +39,11 @@ export const UserEntity = new EntitySchema<User>({
           type: 'one-to-many',
           target: 'invoice',
           inverseSide: 'user'
+      },
+      roles: {
+          type: 'many-to-many',
+          target: 'role',
+          joinTable: true
       }
   }
 });
