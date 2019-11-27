@@ -2,6 +2,11 @@ import { IRouteConfig } from '.';
 import { Application } from 'express';
 import { allow } from './guard.middleware';
 
+/**
+ * It will append allow middleware to the paths with required claims based on passed configuration object.
+ * @param app express instance.
+ * @param config route configs which should contain path and required claims.
+ */
 export function secure(app: Application, config: IRouteConfig[]) {
   config.forEach(item => {
 
