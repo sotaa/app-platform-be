@@ -3,7 +3,7 @@ import { IdentityUserEntity, TokenEntity } from '../../libs/identity/typeorm';
 import { InvoiceEntity, TransactionEntity, PaymentPlanEntity } from '../../libs/payments/typeorm';
 import { UserEntity, ApplicationEntity } from '../../libs/user-directory/typeorm';
 import { PaymentResultEntity } from '../../libs/payments/typeorm/entities/payment-result.entity';
-import { RoleEntity } from '../../libs/guard/typeorm';
+import { RoleEntityFactory } from '../../libs/guard/typeorm';
 
 export async function initialize(config: DBConfiguration) {
   return await createConnection({
@@ -18,7 +18,7 @@ export async function initialize(config: DBConfiguration) {
       PaymentPlanEntity,
       InvoiceEntity,
       TransactionEntity,
-      RoleEntity('role', UserEntity.options.name, 'roles')
+      RoleEntityFactory.create('role', UserEntity.options.name, 'roles')
     ],
     migrations: ['../migration/**/*.ts'],
     subscribers: ['../subscriber/**/*.ts']

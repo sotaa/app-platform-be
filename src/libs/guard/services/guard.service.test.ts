@@ -1,18 +1,33 @@
 import 'mocha';
 
-import { expect , should} from 'chai';
+import { expect } from 'chai';
 import { GuardService } from './guard.service';
+import { IRoleRepository, FindManyOptions, FindOneOptions } from '../interfaces/role.repository';
+import { IRole } from '..';
+import { Role } from '../classes';
+import { IGuardUser } from '../interfaces';
+
+class MockRoleRepository implements IRoleRepository {
+  save(role: IRole): Promise<IRole> {
+    return Promise.resolve(role);
+  }
+  find(filter?: FindManyOptions<IRole>): Promise<IRole[]> {
+    return Promise.resolve([]);
+  }
+  findOne(filter: FindOneOptions<IRole>): Promise<IRole> {
+    return Promise.resolve(new Role('mock', []));
+  }
+}
 
 let guardService: GuardService;
-const user = { roles: [{ title: 'role1', permissions: ['pr1', 'pr2', 'p3'] }] };
+const user: IGuardUser = { roles: [{users: [], title: 'role1', permissions: ['pr1', 'pr2', 'p3'] }] };
 describe('Guard Service', () => {
   it('Should Create', () => {
-    guardService = new GuardService();
+    guardService = new GuardService(new MockRoleRepository);
     expect(guardService).not.undefined;
   });
 
   it('Should grant the access', () => {
-    const user = { roles: [{ title: 'role1', permissions: ['pr1', 'pr2', 'pr3'] }] };
 
     let isGranted = guardService.hasPermissions(user, ['pr1', 'pr2']);
     expect(isGranted).be.true;
@@ -23,7 +38,6 @@ describe('Guard Service', () => {
   });
 
   it('Should not grant the access', () => {
-
     let isGranted = guardService.hasPermissions(user, ['pr10', 'pr2']);
     expect(isGranted).be.false;
     isGranted = guardService.hasPermissions(user, ['pr20']);

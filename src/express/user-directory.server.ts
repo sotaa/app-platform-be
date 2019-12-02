@@ -64,7 +64,7 @@ export class UserDirectoryServer {
     for (let route of routes) {
       this.app.use(route.path, authMiddleware);
     }
-    secure(this.app, routes);
+    secure(this.app, routes, iocContainer.get(TYPES.IGuardService));
   }
 
   public async start(port: string | number) {

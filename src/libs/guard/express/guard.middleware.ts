@@ -1,11 +1,10 @@
-import { GuardService } from '../services';
+import { IGuardService } from '..';
 
-const guardService = new GuardService();
 /**
  * Returns a middleware that allows access to users who has the required claims (permissions).
  * @param claims required claims to access the route.
  */
-export function allow(claims?: string[]) {
+export function allow(guardService: IGuardService, claims?: string[]) {
   return (req: any, res: any, next: Function) => {
     if (guardService.hasPermissions(req.user, claims)) {
       next();

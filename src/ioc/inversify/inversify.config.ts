@@ -4,7 +4,8 @@ import {
   PaymentPlanService,
   InvoiceService,
   PaymentService,
-  UserService
+  UserService,
+  TypeOrmGuardService
 } from '../../services';
 
 import { PaymentPlansController, ApplicationController, AuthController, PaymentController } from '../../express/controllers';
@@ -27,6 +28,7 @@ iocContainer.bind(TYPES.IIdentityConfig).toConstantValue(identityConfig);
 iocContainer.bind(TYPES.ITenant).toConstantValue(tenant);
 iocContainer.bind(TYPES.IPaymentService).to(PaymentService).inSingletonScope();
 iocContainer.bind(TYPES.IUserService).to(UserService).inSingletonScope();
+iocContainer.bind(TYPES.IGuardService).to(TypeOrmGuardService).inSingletonScope();
 
 
 iocContainer.bind(PaymentPlansController).toSelf().inSingletonScope();

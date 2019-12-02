@@ -6,6 +6,7 @@ export const TYPES = {
     IAuthService: Symbol('IAuthService'),
     IIdentityConfig: Symbol('IIdentityConfig'),
     ITenant: Symbol('ITenant'),
-    IPaymentService: Symbol('IPaymentService')
+    IPaymentService: Symbol('IPaymentService'),
+    IGuardService: Symbol('IGuardService')
   };
   

@@ -8,30 +8,53 @@ import { IRole } from '../../';
  * @param userRolesPropertyName The property name which defines roles array in property entity.
  * @param tableName Name of the table for storing roles data in it.
  */
-export const RoleEntity = (
-  entityName: string,
-  userEntityName: string,
-  userRolesPropertyName: string,
-  tableName: string = entityName,
-) =>
-  new EntitySchema<IRole>({
-    name: entityName,
-    tableName: tableName,
-    columns: {
-      title: {
-        type: String,
-        primary: true,
-        nullable: false
+export class RoleEntityFactory {
+  private static roleEntity: EntitySchema<IRole>;
+
+  static create(
+    entityName: string,
+    userEntityName: string,
+    userRolesPropertyName: string,
+    tableName: string = entityName
+  ) {
+    
+    // create role entity based on inputs.
+    this.roleEntity = new EntitySchema<IRole>({
+      name: entityName,
+      tableName: tableName,
+      columns: {
+        title: {
+          type: String,
+          primary: true,
+          nullable: false
+        },
+        permissions: {
+          type: 'simple-array'
+        }
       },
-      permissions: {
-        type: 'simple-array',
+      relations: {
+        users: {
+          type: 'many-to-many',
+          target: userEntityName,
+          inverseSide: userRolesPropertyName
+        },
+        parent: {
+          type: 'many-to-one',
+          target: entityName,
+          treeChildren: true
+        },
+        children: {
+          type: 'one-to-many',
+          target: entityName,
+          treeParent: true
+        }
       }
-    },
-    relations: {
-      users: {
-        type: 'many-to-many',
-        target: userEntityName,
-        inverseSide: userRolesPropertyName
-      }
-    }
-  });
+    });
+
+    return this.getRoleEntity();
+  }
+
+  static getRoleEntity() {
+    return this.roleEntity;
+  }
+}
