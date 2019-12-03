@@ -1,8 +1,9 @@
 import { IGuardUser, IRole, IGuardService } from '../interfaces';
-import { intersection, flatten } from 'lodash';
+import { intersection } from 'lodash';
 import { IRoleRepository } from '../interfaces/role.repository';
+import { RoleHasUserError } from '../classes/errors';
 
-export class GuardService implements IGuardService{
+export class GuardService implements IGuardService {
   constructor(protected roleRepo: IRoleRepository) {}
   /**
    * check whether the use has all of required permissions or not.
@@ -20,7 +21,7 @@ export class GuardService implements IGuardService{
      * و دسترسی های کاربر رو بدست میاریم اگر مشترکات با دسترسی های لازم برابر بود
      * پس کاربر همه دسترسی های لازم رو داره
      */
-    const userPermissions = flatten(user.roles.map(role => role.permissions));
+    const userPermissions = user.role.permissions;
 
     if (requiredPermissions.length > userPermissions.length) return false;
 
@@ -31,13 +32,25 @@ export class GuardService implements IGuardService{
     return this.roleRepo.save(role);
   }
 
-  findByParentTitle(parentTitle: string, loadChildren: boolean = true) {
+  findRolesByParentTitle(parentTitle: string) {
     const where = { parent: { title: parentTitle } };
-    const relations = loadChildren ? ['children'] : [];
-    return this.roleRepo.find({ where, relations });
+    return this.roleRepo.find({ where } as any);
   }
 
-  findByTitle(title: string) {
-    return this.roleRepo.findOne({where: {title}});
+  findRoleByTitle(title: string) {
+    return this.roleRepo.findOne({ where: { title } });
+  }
+
+  updateRole(title: string, role: IRole) {
+    return this.roleRepo.update({ title }, role);
+  }
+
+  async deleteRole(title: string) {
+    const role = await this.roleRepo.findOne({ where: { title }, relations: ['users'] });
+    if (role.users.length > 0) {
+      throw new RoleHasUserError();
+    }
+
+    return this.roleRepo.delete({ title });
   }
 }

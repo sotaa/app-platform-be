@@ -9,6 +9,8 @@ export interface IRoleRepository {
     */
    find(filter?: FindManyOptions<IRole>): Promise<IRole[]>;
    findOne(filter: FindOneOptions<IRole>): Promise<IRole>;
+   update(filter: FindConditions<IRole>, role: IRole): Promise<any>;
+   delete(filter: FindConditions<IRole>): Promise<any>;
 }
 
 export declare type FindConditions<T> = {

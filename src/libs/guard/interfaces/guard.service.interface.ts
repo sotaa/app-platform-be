@@ -6,7 +6,11 @@ export interface IGuardService {
 
   createRole(role: IRole): Promise<IRole>;
 
-  findByParentTitle(parentTitle: string, loadChildren: boolean): Promise<IRole[]>;
+  findRolesByParentTitle(parentTitle: string): Promise<IRole[]>;
 
-  findByTitle(title: string): Promise<IRole>;
+  findRoleByTitle(title: string): Promise<IRole>;
+
+  deleteRole(title: string): Promise<any>;
+  
+  updateRole(title: string, role: IRole): Promise<IRole>;
 }

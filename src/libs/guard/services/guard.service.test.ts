@@ -20,7 +20,7 @@ class MockRoleRepository implements IRoleRepository {
 }
 
 let guardService: GuardService;
-const user: IGuardUser = { roles: [{users: [], title: 'role1', permissions: ['pr1', 'pr2', 'p3'] }] };
+const user: IGuardUser = { role: {users: [], title: 'role1', permissions: ['pr1', 'pr2', 'p3'] } };
 describe('Guard Service', () => {
   it('Should Create', () => {
     guardService = new GuardService(new MockRoleRepository);

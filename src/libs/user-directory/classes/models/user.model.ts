@@ -5,7 +5,7 @@ import { IInvoiceOwner, IInvoice } from '../../../payments';
 import { IGuardUser, IRole } from '../../../guard';
 
 export class User implements IUser , IGuardUser, IInvoiceOwner{
-  roles: IRole[];
+  role: IRole;
   id: string;
   firstName?: string;
   lastName?: string;
