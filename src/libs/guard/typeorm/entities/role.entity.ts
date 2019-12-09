@@ -34,7 +34,7 @@ export class RoleEntityFactory {
       },
       relations: {
         users: {
-          type: 'many-to-many',
+          type: 'one-to-many',
           target: userEntityName,
           inverseSide: userRolesPropertyName
         },

@@ -6,7 +6,7 @@ import { PaymentResultEntity } from '../../libs/payments/typeorm/entities/paymen
 import { RoleEntityFactory } from '../../libs/guard/typeorm';
 
 export async function initialize(config: DBConfiguration) {
-  return await createConnection({
+  const connection = await createConnection({
     ...config,
     logging: false,
     entities: [
@@ -23,6 +23,8 @@ export async function initialize(config: DBConfiguration) {
     migrations: ['../migration/**/*.ts'],
     subscribers: ['../subscriber/**/*.ts']
   } as ConnectionOptions);
+  
+  return connection;
 }
 
 export interface DBConfiguration {

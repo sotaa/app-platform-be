@@ -11,6 +11,7 @@ import { iocContainer, TYPES } from '../ioc';
 import { IIdentityConfig } from '../libs/identity/interfaces';
 import { AUTHENTICATED_ROUTES } from './routes/authenticated-routes.const';
 import { secure, IRouteConfig } from '../libs/guard/express';
+import { seedDB } from '../services/bootstrap/seeder';
 
 export class UserDirectoryServer {
   app: express.Express;
@@ -69,9 +70,10 @@ export class UserDirectoryServer {
 
   public async start(port: string | number) {
     this.initialize();
-    await initializeDatabase(this.config.dbConfig);
+    const connection = await initializeDatabase(this.config.dbConfig);
     this.logger.info(`Connected to database ${this.config.dbConfig.database} on server ${this.config.dbConfig.host}`);
-
+    await seedDB(connection);
+    this.logger.info(`Database has been seeded.`);
     this.app.listen(port, () => this.logger.info(`User Directory is started on port ${port}`));
   }
 }

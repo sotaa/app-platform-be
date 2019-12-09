@@ -1,9 +1,8 @@
-import { initialize, DBConfiguration } from "./bootstrap";
+import { initialize, DBConfiguration } from './bootstrap';
+import { seedDB } from './bootstrap/seeder';
 
-
-export const initializeDatabase = async (config: DBConfiguration) => {
-    await initialize(config);
-    
+export const initializeDatabase = (config: DBConfiguration) => {
+   return initialize(config);
 };
 
 export type DBConfiguration = DBConfiguration;
