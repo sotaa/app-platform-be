@@ -8,15 +8,20 @@ import { User } from '../../libs/user-directory/classes/models';
 @Route('auth')
 @injectable()
 export class AuthController extends Controller {
-  constructor(@inject(TYPES.IAuthService) private authService: IAuthService, @inject(TYPES.IUserService) private userService: IUserService) {
+  constructor(
+    @inject(TYPES.IAuthService) private authService: IAuthService,
+    @inject(TYPES.IUserService) private userService: IUserService
+  ) {
     super();
   }
 
   @Post('register')
   public async register(@Body() authData: IAuthData): Promise<IAuthResult> {
     try {
-      const authResult = await this.authService.register(authData);
-      await this.userService.create(new User(authData.username, authResult.user.id))
+      let authResult = await this.authService.register(authData);
+      const user = await this.userService.create(new User(authData.username, authResult.user.id));
+      authResult = await this.authService.addCustomPayloadToAuthResult(authResult, {role: user.role});
+      authResult.user.role = user.role;
       return authResult;
     } catch (e) {
       this.setStatus(BAD_REQUEST);
@@ -27,9 +32,14 @@ export class AuthController extends Controller {
   @Post('login')
   public async login(@Body() authData: IAuthData): Promise<IAuthResult> {
     try {
-      return await this.authService.login(authData);
+      let authResult = await this.authService.login(authData);
+      const user = await this.userService.findById(authResult.user.id);
+      authResult = await this.authService.addCustomPayloadToAuthResult(authResult, {role: user.role});
+      authResult.user.role = user.role;
+      return authResult;
     } catch (e) {
       this.setStatus(BAD_REQUEST);
+      console.log(e);
       return e;
     }
   }

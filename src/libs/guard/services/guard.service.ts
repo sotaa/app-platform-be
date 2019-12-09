@@ -32,6 +32,10 @@ export class GuardService implements IGuardService {
     return this.roleRepo.save(role);
   }
 
+  addOrUpdate(role: IRole): Promise<IRole> {
+    return this.roleRepo.save(role);
+  }
+
   findRolesByParentTitle(parentTitle: string) {
     const where = { parent: { title: parentTitle } };
     return this.roleRepo.find({ where } as any);

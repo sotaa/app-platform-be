@@ -23,4 +23,6 @@ export interface IAuthService {
    * @param refreshToken
    */
   renewToken(refreshToken: string): ITokenPair | Promise<ITokenPair>;
+
+  addCustomPayloadToAuthResult(authResult: IAuthResult, payload: any): Promise<IAuthResult>;
 }

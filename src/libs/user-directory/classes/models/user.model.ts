@@ -4,7 +4,7 @@ import { v1 } from 'uuid';
 import { IInvoiceOwner, IInvoice } from '../../../payments';
 import { IGuardUser, IRole } from '../../../guard';
 
-export class User implements IUser , IGuardUser, IInvoiceOwner{
+export class User implements IUser, IInvoiceOwner{
   role: IRole;
   id: string;
   firstName?: string;

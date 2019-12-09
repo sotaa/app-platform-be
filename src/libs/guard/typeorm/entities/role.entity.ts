@@ -46,8 +46,7 @@ export class RoleEntityFactory {
         children: {
           type: 'one-to-many',
           target: entityName,
-          treeParent: true,
-          eager: true
+          treeParent: true
         }
       }
     });

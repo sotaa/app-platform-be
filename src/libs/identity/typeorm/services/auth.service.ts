@@ -28,9 +28,9 @@ export class AuthService implements IAuthService {
     let result;
 
     await this.manager.transaction(async transactionEntityManager => {
-      await this.manager.save('identity_user' , user);
+      await this.manager.save('identity_user', user);
       result = this.generateAuthResult(user);
-      await this.saveUserTokens(transactionEntityManager, user, result);
+      await this.saveUserTokens(user, result, transactionEntityManager);
     });
     return result;
   }
@@ -52,7 +52,7 @@ export class AuthService implements IAuthService {
     const result = this.generateAuthResult(_user);
 
     this.manager.transaction(async transactionManager => {
-      await this.saveUserTokens(transactionManager, _user, result);
+      await this.saveUserTokens(_user, result,transactionManager);
     });
 
     return result;
@@ -70,20 +70,23 @@ export class AuthService implements IAuthService {
     } catch (e) {
       throw new InvalidTokenError();
     }
-    const result = {
-      token: this.tokenManager.generate(data, this.config.secretKey, this.config.tokenLife),
-      refreshToken: this.tokenManager.generate(data, this.config.secretKey)
-    };
+    const result = this.generateTokenPair(data);
 
-    await this.saveUserTokens(this.manager, data.user, result);
+    await this.saveUserTokens(data.user, result);
     return result;
   }
 
-  private async saveUserTokens(manager: EntityManager, _user: IIdentityUser, result: ITokenPair) {
+  async addCustomPayloadToAuthResult(authResult: IAuthResult, payload: any) {
+    const newAuthResult = {...authResult, ...this.generateTokenPair(payload)};
+    this.saveUserTokens(authResult.user, { token: newAuthResult.token, refreshToken: newAuthResult.refreshToken});
+    return newAuthResult;
+  }
+
+  private async saveUserTokens(_user: IIdentityUser, result: ITokenPair, manager = this.manager) {
     const accessToken = new AccessToken(result.token, _user);
     const refreshToken = new RefreshToken(result.refreshToken, _user);
 
-    await manager.save('token' ,accessToken);
+    await manager.save('token', accessToken);
     await manager.save('token', refreshToken);
   }
 
@@ -94,13 +97,16 @@ export class AuthService implements IAuthService {
     const user = { id: _user.id, username: _user.username };
 
     result.expiresIn = this.config.tokenLife;
-    result.token = this.tokenManager.generate(
-    {user},
-      this.config.secretKey,
-      this.config.tokenLife
-    );
-    result.refreshToken = this.tokenManager.generate({user}, this.config.secretKey);
+    result.token = this.tokenManager.generate({ info: user }, this.config.secretKey, this.config.tokenLife);
+    result.refreshToken = this.tokenManager.generate({ user }, this.config.secretKey);
     result.user = user;
     return result;
+  }
+
+  private generateTokenPair(payload: any): ITokenPair {
+    return {
+      token: this.tokenManager.generate(payload, this.config.secretKey, this.config.tokenLife),
+      refreshToken: this.tokenManager.generate(payload, this.config.secretKey)
+    };
   }
 }

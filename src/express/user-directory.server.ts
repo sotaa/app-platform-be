@@ -70,9 +70,9 @@ export class UserDirectoryServer {
 
   public async start(port: string | number) {
     this.initialize();
-    const connection = await initializeDatabase(this.config.dbConfig);
+    await initializeDatabase(this.config.dbConfig);
     this.logger.info(`Connected to database ${this.config.dbConfig.database} on server ${this.config.dbConfig.host}`);
-    await seedDB(connection);
+    await seedDB();
     this.logger.info(`Database has been seeded.`);
     this.app.listen(port, () => this.logger.info(`User Directory is started on port ${port}`));
   }

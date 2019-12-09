@@ -4,14 +4,9 @@ import { RoleEntityFactory } from '../entities';
 import { getRepository, EntitySchema, Repository, FindConditions } from 'typeorm';
 
 export class RoleTypeormRepository implements IRoleRepository {
-  protected roleEntity: EntitySchema<IRole>;
-
+  
   protected get ormRepo(): Repository<IRole> {
-    return getRepository(this.roleEntity);
-  }
-
-  constructor() {
-    this.roleEntity = RoleEntityFactory.getRoleEntity();
+    return getRepository(RoleEntityFactory.getRoleEntity());
   }
 
   save(role: IRole): Promise<IRole> {
@@ -22,7 +17,7 @@ export class RoleTypeormRepository implements IRoleRepository {
     if((filter.where as FindConditions<IRole>).parent) {
       const parentCondition = (filter.where as FindConditions<IRole>).parent as FindConditions<IRole>;
       if(parentCondition.title) {
-        const entityName = this.roleEntity.options.name;
+        const entityName = RoleEntityFactory.getRoleEntity().options.name;
         const query = this.ormRepo.createQueryBuilder(entityName).where('parentTitle = :title', {title: parentCondition.title});
         return query.getMany();
       }
