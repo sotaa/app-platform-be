@@ -1,4 +1,4 @@
-import { Controller, Route, Post, Get, Path, Body, BodyProp } from 'tsoa';
+import { Controller, Route, Post, Get, Body, BodyProp } from 'tsoa';
 import { injectable, inject } from 'inversify';
 import { IUserService } from '../../libs/user-directory';
 import { IAuthService, IAuthResult, IAuthData, ITokenPair } from '../../libs/identity/interfaces';
