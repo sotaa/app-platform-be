@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import './controllers';
 
 import * as express from 'express';
-import { RegisterRoutes } from './routes/routes';
+import { userDirectoryRouter } from './routes';
 import * as swaggerUi from 'swagger-ui-express';
 import { DBConfiguration, initializeDatabase, clean } from '../services';
 import { ILogger } from '../logger';
@@ -25,8 +25,8 @@ export class UserDirectoryServer {
   private async initialize() {
     this.app.use(express.json());
     this.handleUncaughtExceptions();
-    this.secure(AUTHENTICATED_ROUTES);
-    RegisterRoutes(this.app);
+    // this.secure(AUTHENTICATED_ROUTES);
+    this.app.use(userDirectoryRouter(this.logger))
   }
 
   /**
@@ -43,6 +43,14 @@ export class UserDirectoryServer {
   public clean() {
     // TODO: Uploaded file cleaner added.
     return clean();
+  }
+
+  /**
+   * this function will seed database with some default values.
+   * @param values default values.
+   */
+  public seedDatabase(values: any) {
+   return seedDB(values);
   }
 
   public enableDocumentation(url: string) {
@@ -69,11 +77,9 @@ export class UserDirectoryServer {
   }
 
   public async start(port: string | number) {
-    this.initialize();
     await initializeDatabase(this.config.dbConfig);
+    this.initialize();
     this.logger.info(`Connected to database ${this.config.dbConfig.database} on server ${this.config.dbConfig.host}`);
-    await seedDB();
-    this.logger.info(`Database has been seeded.`);
     this.app.listen(port, () => this.logger.info(`User Directory is started on port ${port}`));
   }
 }
