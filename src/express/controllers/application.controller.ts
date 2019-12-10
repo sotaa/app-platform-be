@@ -3,34 +3,26 @@ import { IApplication, IApplicationService } from '../../libs/user-directory';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../ioc/types';
 
-@Route('applications')
 @injectable()
-export class ApplicationController extends Controller {
-  constructor(@inject(TYPES.IApplicationService) private applicationService: IApplicationService) {
-      super();
-  }
+export class ApplicationController {
+  constructor(@inject(TYPES.IApplicationService) private applicationService: IApplicationService) {}
   
-  @Get()
-  async list(@Query() filter?: any): Promise<IApplication[]> {
+  async list(filter?: any): Promise<IApplication[]> {
     return this.applicationService.find(filter);
   }
 
-  @Get('{id}')
   async find(id: number): Promise<IApplication> {
     return this.applicationService.findById(id);
   }
   
-  @Post()
-  async create(@Body() plan: IApplication): Promise<IApplication> {
+  async create(plan: IApplication): Promise<IApplication> {
     return await this.applicationService.create(plan);
   }
 
-  @Put('{id}')
-  async update(id:number, @Body() plan: IApplication): Promise<any> {
+  async update(id:number,plan: IApplication): Promise<any> {
     return this.applicationService.update(id, plan);
   }
   
-  @Delete('{id}')
    async delete(id: number): Promise<any> {
      return this.applicationService.delete(id);
    }
