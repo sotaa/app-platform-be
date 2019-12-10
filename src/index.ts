@@ -35,6 +35,9 @@ async function createServer() {
     userDirectory.app.emit('start test');
   }
 
+  await userDirectory.seedDatabase(require('./config/seed-values.json')); 
+  appLogger.info(`Database has been seeded.`);
+
   return userDirectory;
 }
 /**
