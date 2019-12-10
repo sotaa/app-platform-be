@@ -8,11 +8,9 @@ import { IUserService } from '../../libs/user-directory';
 
 const permissions = values(permissionsObject);
 
-const seedValues = require('../../config/seed-values.json');
-
 const SUPER_ADMIN_ROLE_TITLE = 'Super Admin';
 
-export async function seedDB() {
+export async function seedDB(seedValues: any) {
   const superAdmin = await createOrUpdateSuperAdminRole();
   createSuperAdminUsers(seedValues.superAdmins, superAdmin);
 }
