@@ -2,12 +2,18 @@ import 'mocha';
 
 import { expect } from 'chai';
 import { GuardService } from './guard.service';
-import { IRoleRepository, FindManyOptions, FindOneOptions } from '../interfaces/role.repository';
+import { IRoleRepository, FindManyOptions, FindOneOptions, FindConditions } from '../interfaces/role.repository';
 import { IRole } from '..';
 import { Role } from '../classes';
 import { IGuardUser } from '../interfaces';
 
 class MockRoleRepository implements IRoleRepository {
+  update(filter: FindConditions<IRole>, role: IRole): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
+  delete(filter: FindConditions<IRole>): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
   save(role: IRole): Promise<IRole> {
     return Promise.resolve(role);
   }

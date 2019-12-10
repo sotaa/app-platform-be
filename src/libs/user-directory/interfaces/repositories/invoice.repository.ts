@@ -1,4 +1,4 @@
-import { IInvoice } from "../models";
+import { IInvoice } from "../../../payments";
 
 export interface IInvoiceRepository extends IInvoiceSaver{
     
