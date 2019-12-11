@@ -1,4 +1,3 @@
-import { Controller, Route, Get, Query , Post, Body, Delete, Put } from 'tsoa';
 import { IApplication, IApplicationService } from '../../libs/user-directory';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../ioc/types';
