@@ -5,13 +5,14 @@
 
 import { UserDirectoryServer } from './express/user-directory.server';
 import { config as envConfig } from 'dotenv-flow';
-import { applicationLogger, requestLogger } from './logger/winston';
+import { applicationLogger, requestLogger, MockLogger } from './logger';
 
 async function createServer() {
-  const appLogger = console; // applicationLogger;
-
+  
   envConfig();
   const config = extractConfig(process.env);
+
+  const appLogger = config.mode === 'test' ? new MockLogger() : console; // applicationLogger;
   appLogger.info('userDirectory is using the following configurations:', config);
 
   const userDirectory = new UserDirectoryServer({ dbConfig: config.dbConfig, logger: appLogger as any });
