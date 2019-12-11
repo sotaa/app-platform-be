@@ -2,7 +2,8 @@ import { ILogger } from '../../logger';
 import { Router } from 'express';
 import { iocContainer, TYPES } from '../../ioc';
 import { applicationRouter } from './application.router';
-import { ApplicationController } from '../controllers';
+import { ApplicationController, AuthController } from '../controllers';
+import { authRouter } from './auth.routes';
 
 class UserDirectoryRouter {
   router: Router;
@@ -12,6 +13,7 @@ class UserDirectoryRouter {
   }
   init() {
     this.router.use('/applications', applicationRouter(iocContainer.get(ApplicationController), this.logger));
+    this.router.use('/auth', authRouter(iocContainer.get(AuthController), this.logger));
   }
 }
 
