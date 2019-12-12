@@ -1,7 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { IUserService, User } from '../../libs/user-directory';
 import { IAuthService, IAuthResult, IAuthData, ITokenPair } from '../../libs/identity/interfaces';
-import { BAD_REQUEST } from 'http-status-codes';
 import { TYPES } from '../../ioc/types';
 
 @injectable()
