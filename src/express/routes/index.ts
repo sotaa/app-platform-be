@@ -1,10 +1,10 @@
 import { ILogger } from '../../logger';
 import { Router } from 'express';
 import { iocContainer, TYPES } from '../../ioc';
-import { applicationRouter } from './application.router';
+import { applicationRouter } from './application.routes';
 import { ApplicationController, AuthController, RoleController } from '../controllers';
 import { authRouter } from './auth.routes';
-import { roleRouter } from './role.router';
+import { roleRouter } from './role.routes';
 
 class UserDirectoryRouter {
   router: Router;
