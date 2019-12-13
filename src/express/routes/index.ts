@@ -14,6 +14,7 @@ class UserDirectoryRouter {
   init() {
     this.router.use('/applications', applicationRouter(iocContainer.get(ApplicationController), this.logger));
     this.router.use('/auth', authRouter(iocContainer.get(AuthController), this.logger));
+    this.router.use('/payment', authRouter(iocContainer.get(AuthController), this.logger));
   }
 }
 

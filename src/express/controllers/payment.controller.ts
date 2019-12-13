@@ -1,6 +1,5 @@
-import { Controller, Route, Request, Post, Get, SuccessResponse } from 'tsoa';
 import { injectable, inject } from 'inversify';
-import { Request as IRequest } from 'express';
+import { Request as IRequest, Response as IResponse } from 'express';
 import { IIdentityUser } from '../../libs/identity/interfaces';
 import { BAD_REQUEST } from 'http-status-codes';
 import { IPaymentResult } from '../../libs/payments';
@@ -9,18 +8,14 @@ import { ZarinpalPaymentMethod } from '../../libs/payments/zarinpal';
 import { IPaymentService } from '../../libs/payments/lib/services/interfaces';
 import { TYPES } from '../../ioc/types';
 
-@Route('payment')
 @injectable()
-export class PaymentController extends Controller {
+export class PaymentController {
   constructor(
     @inject(TYPES.ITenant) private tenant: ITenant,
     @inject(TYPES.IPaymentService) private paymentService: IPaymentService
-  ) {
-    super();
-  }
+  ) {}
 
-  @Post('buy/{planId}')
-  async buy(planId: string, @Request() req: IRequest): Promise<IPaymentResult> {
+  async buy(planId: string, req: IRequest, res: IResponse): Promise<IPaymentResult> {
     const verifyUrl = req.protocol.concat(
       '://',
       req.hostname.concat(req.hostname === 'localhost' ? ':3000' : ''),
@@ -32,24 +27,14 @@ export class PaymentController extends Controller {
     try {
       return await this.paymentService.buy(planId, idUser.id.toString(), zPal, verifyUrl);
     } catch (e) {
+      res.status(BAD_REQUEST);
       console.log(e);
-      this.setStatus(BAD_REQUEST);
       return e;
     }
   }
 
-  @Get('verify')
-  @SuccessResponse(302, 'Redirect')
-  public async verify(@Request() req: IRequest): Promise<any> {
-    const params = req.query;
+  public async verify(params: any): Promise<any> {
     const zPal = new ZarinpalPaymentMethod('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', true);
-    try {
-      await this.paymentService.verify(params, zPal);
-      req.res.redirect(this.tenant.successPaymentPage);
-    } catch (e) {
-      this.setStatus(BAD_REQUEST);
-      console.log(e);
-      req.res.redirect(this.tenant.failedPaymentPage);
-    }
+    return this.paymentService.verify(params, zPal);
   }
 }
