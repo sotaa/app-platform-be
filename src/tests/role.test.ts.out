@@ -1,0 +1,45 @@
+import 'mocha';
+import {userDirectory as UDPromise} from '..';
+import * as chai from 'chai';
+import chaiHttp = require('chai-http');
+import { Express } from 'express';
+import { iocContainer } from '../ioc';
+import { RoleController } from '../express/controllers';
+import { Role } from '../libs/guard';
+import { APPLICATION_CREATE } from '../config/permissions.const';
+
+chai.use(chaiHttp);
+let should = chai.should();
+const expect = chai.expect;
+
+let sample = {
+  name: 'string',
+  price: 0,
+  dateRange: 0,
+  isActive: true,
+  description: 'string'
+};
+
+
+let userDirectory: Express;
+let roleController = iocContainer.get(RoleController);
+
+before(async () => {
+  userDirectory = (await UDPromise).app;
+});
+
+describe('Role Controller', () => {
+  it(`Should get user's role with it's children`, async () => {
+    const req = { 
+    'user.title': 'Super Admin'
+    }
+    const result = await roleController.fetch(req as any);
+    result.should.be.instanceof(Array);
+  });
+});
+
+describe('Should create new role', async () => {
+  const role = new Role('test', [APPLICATION_CREATE]);
+  const result = await roleController.create(role);
+  expect(result).equal(role);
+});

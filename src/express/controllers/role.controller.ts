@@ -8,7 +8,7 @@ export class RoleController {
   constructor(@inject(TYPES.IGuardService) protected guardService: IGuardService) {}
 
   fetch(req: IRequest): Promise<IRole[]> {
-    const user = req.body['user'] as IGuardUser;
+    const user = (req as any).user as IGuardUser;
     return this.guardService.findRolesByParentTitle(user.role.title);
   }
 
@@ -16,6 +16,8 @@ export class RoleController {
     return this.guardService.updateRole(title, role);
   }
 
+  // TODO: This method should check user permissions, cause a user can create a role with permissions same or less than itself.>>>
+  // TODO: >>> in the other word creator permissions must include new role permissions and the permissions are not in creator permissions are not allowed.
   create(role: IRole): Promise<IRole> {
     return this.guardService.createRole(role);
   }
