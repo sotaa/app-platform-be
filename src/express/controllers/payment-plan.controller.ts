@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../ioc/types';
+import { TYPES } from '../../ioc';
 import { IPaymentPlan, IPaymentPlanService } from '../../libs/payments';
 
 @injectable()
