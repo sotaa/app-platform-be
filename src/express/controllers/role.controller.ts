@@ -1,7 +1,7 @@
 import { IGuardService, IGuardUser, IRole } from '../../libs/guard';
 import { Request as IRequest } from 'express';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../../ioc';
+import { TYPES } from '../../ioc/types';
 
 @injectable()
 export class RoleController {

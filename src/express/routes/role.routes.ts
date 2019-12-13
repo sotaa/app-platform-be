@@ -1,6 +1,6 @@
 import { RoleController } from '../controllers';
 import { Request, Response, Router } from 'express';
-import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from 'http-status-codes';
+import { BAD_REQUEST } from 'http-status-codes';
 import { ILogger } from '../../logger';
 
 class RoleRouter {

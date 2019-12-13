@@ -8,7 +8,7 @@ import {
   TypeOrmGuardService
 } from '../../services';
 
-import { PaymentPlansController, ApplicationController, AuthController, PaymentController } from '../../express/controllers';
+import { PaymentPlansController, ApplicationController, AuthController, PaymentController, UserController, RoleController } from '../../express/controllers';
 // import { UserController } from '../../express/controllers/user.controller';
 import { AuthService } from '../../services/auth.service';
 import { TYPES } from '../types';
@@ -34,7 +34,8 @@ iocContainer.bind(TYPES.IGuardService).to(TypeOrmGuardService).inSingletonScope(
 iocContainer.bind(PaymentPlansController).toSelf().inSingletonScope();
 iocContainer.bind(ApplicationController).toSelf().inSingletonScope();
 iocContainer.bind(PaymentController).toSelf().inSingletonScope();
-// iocContainer.bind(UserController).toSelf().inSingletonScope();
+iocContainer.bind(UserController).toSelf().inSingletonScope();
 iocContainer.bind(AuthController).toSelf().inSingletonScope();
+iocContainer.bind(RoleController).toSelf().inSingletonScope();
 
 export { iocContainer, inject, injectable };

@@ -1,15 +1,12 @@
-import { Controller, Route, Post, Body, Request } from 'tsoa';
 import { Request as IRequest} from 'express';
 import { IUser, IUserService } from '../../libs/user-directory/interfaces';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../../ioc/types';
 import { IIdentityUser } from '../../libs/identity/interfaces';
 
-@Route('users')
 @injectable()
-export class UserController extends Controller {
+export class UserController {
   constructor(@inject(TYPES.IUserService) private userService: IUserService) {
-      super();
   }
   
   // @Get()
@@ -22,11 +19,10 @@ export class UserController extends Controller {
   //   return this.userService.findById(id);
   // }
   
-  @Post()
-  async create(@Body() user: IUser, @Request() req: IRequest): Promise<IUser> {
+  create(user: IUser, req: IRequest): Promise<IUser> {
     const idUser = (req.body as any).user as IIdentityUser;
     user.id = idUser.id.toString();
-    return await this.userService.create(user);
+    return this.userService.create(user);
   }
 
 
