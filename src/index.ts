@@ -12,7 +12,7 @@ async function createServer() {
   envConfig();
   const config = extractConfig(process.env);
 
-  const appLogger = config.mode === 'test' ? new MockLogger() : console; // applicationLogger;
+  const appLogger = config.mode === 'test' ? new MockLogger() : applicationLogger;
   appLogger.info('userDirectory is using the following configurations:', config);
 
   const userDirectory = new UserDirectoryServer({ dbConfig: config.dbConfig, logger: appLogger as any });
