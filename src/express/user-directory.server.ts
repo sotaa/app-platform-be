@@ -25,7 +25,7 @@ export class UserDirectoryServer {
   private async initialize() {
     this.app.use(express.json());
     this.handleUncaughtExceptions();
-    // this.secure(AUTHENTICATED_ROUTES);
+    this.secure(AUTHENTICATED_ROUTES);
     this.app.use(userDirectoryRouter(this.logger))
   }
 
