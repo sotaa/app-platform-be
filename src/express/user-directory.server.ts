@@ -12,6 +12,7 @@ import { IIdentityConfig } from '../libs/identity/interfaces';
 import { AUTHENTICATED_ROUTES } from './routes/authenticated-routes.const';
 import { secure, IRouteConfig } from '../libs/guard/express';
 import { seedDB } from '../services/bootstrap/seeder';
+import * as cors from 'cors';
 
 export class UserDirectoryServer {
   app: express.Express;
@@ -34,6 +35,10 @@ export class UserDirectoryServer {
    */
   public enableRequestLogging(logger?: ILogger) {
     this.app.use(logMiddleware(logger || this.logger));
+  }
+
+  enableCORS(options?: cors.CorsOptions) {
+    this.app.use(cors(options));
   }
 
   /**

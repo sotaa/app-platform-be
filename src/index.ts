@@ -17,6 +17,8 @@ async function createServer() {
 
   const userDirectory = new UserDirectoryServer({ dbConfig: config.dbConfig, logger: appLogger as any });
 
+  userDirectory.enableCORS();
+
   /**
    * Enable documentation on /docs route in development mode.
    * Also we will log all incoming requests and outgoing responses on production server.
