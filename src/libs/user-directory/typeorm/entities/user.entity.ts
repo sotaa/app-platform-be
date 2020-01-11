@@ -18,13 +18,16 @@ export const UserEntity = new EntitySchema<User>({
         type: 'date'
     },
     firstName: {
-        type: String
+        type: String,
+        nullable: true
     },
     lastName: {
-        type: String
+        type: String,
+        nullable: true
     },
     mobile: {
-        type: String
+        type: String,
+        nullable: true
     },
     registerDate: {
         type: Date,
@@ -32,6 +35,7 @@ export const UserEntity = new EntitySchema<User>({
     },
     sex: {
         type: String,
+        default: 'MALE'
     }
   },
   relations: {
