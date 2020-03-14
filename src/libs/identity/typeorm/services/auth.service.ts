@@ -11,7 +11,7 @@ export class AuthService implements IAuthService {
     protected manager: EntityManager,
     protected tokenManager: ITokenManager,
     protected config: IIdentityConfig
-  ) {}
+  ) { }
 
   async register(authData: IAuthData): Promise<IAuthResult> {
     const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator(), username =>
@@ -52,7 +52,7 @@ export class AuthService implements IAuthService {
     const result = this.generateAuthResult(_user);
 
     this.manager.transaction(async transactionManager => {
-      await this.saveUserTokens(_user, result,transactionManager);
+      await this.saveUserTokens(_user, result, transactionManager);
     });
 
     return result;
@@ -77,8 +77,8 @@ export class AuthService implements IAuthService {
   }
 
   async addCustomPayloadToAuthResult(authResult: IAuthResult, payload: any) {
-    const newAuthResult = {...authResult, ...this.generateTokenPair(payload)};
-    this.saveUserTokens(authResult.user, { token: newAuthResult.token, refreshToken: newAuthResult.refreshToken});
+    const newAuthResult = { ...authResult, ...this.generateTokenPair({ ...authResult, ...payload }) };
+    this.saveUserTokens(authResult.user, { token: newAuthResult.token, refreshToken: newAuthResult.refreshToken });
     return newAuthResult;
   }
 
