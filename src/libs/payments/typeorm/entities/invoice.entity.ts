@@ -18,7 +18,8 @@ export const InvoiceEntity = new EntitySchema<Invoice>({
             type: Number,
         },
         description: {
-            type: String
+            type: String,
+            nullable: true
         },
         paymentStatus: {
             type: 'enum',
