@@ -17,7 +17,7 @@ export class RoleEntityFactory {
     userRolesPropertyName: string,
     tableName: string = entityName
   ) {
-    
+
     // create role entity based on inputs.
     this.roleEntity = new EntitySchema<IRole>({
       name: entityName,
@@ -36,7 +36,7 @@ export class RoleEntityFactory {
         users: {
           type: 'one-to-many',
           target: userEntityName,
-          inverseSide: userRolesPropertyName
+          inverseSide: userRolesPropertyName,
         },
         parent: {
           type: 'many-to-one',
@@ -46,7 +46,8 @@ export class RoleEntityFactory {
         children: {
           type: 'one-to-many',
           target: entityName,
-          treeParent: true
+          treeParent: true,
+          cascade: true
         }
       }
     });
