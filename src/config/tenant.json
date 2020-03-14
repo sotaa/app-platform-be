@@ -1,4 +1,4 @@
 {
-    "successPaymentPage": "http://localhost:4200/payment/success",
-    "failedPaymentPage": "http://localhost:4200/payment/fail"
+    "successPaymentPage": "http://localhost:4200/payment-plans/payment/success",
+    "failedPaymentPage": "http://localhost:4200/payment-plans/payment/fail"
 }
