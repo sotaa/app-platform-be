@@ -1,4 +1,3 @@
-import { IRoleRepository } from './../../libs/guard/interfaces/role.repository';
 import { IRole, Role, IGuardService } from '../../libs/guard';
 import * as permissionsObject from '../../config/permissions.const';
 import * as defaultUserPermissionsObject from '../../config/user-default-permissions.const';
@@ -15,9 +14,9 @@ const defaultUserPermissions = values(defaultUserPermissionsObject);
 const SUPER_ADMIN_ROLE_TITLE = 'Super Admin';
 
 export async function seedDB(seedValues: any) {
-  // const superAdmin = await createOrUpdateSuperAdminRole();
+  const superAdmin = await createOrUpdateSuperAdminRole();
   await createOrUpdateDefaultUserRole();
-  // createSuperAdminUsers(seedValues.superAdmins, superAdmin);
+  createSuperAdminUsers(seedValues.superAdmins, superAdmin);
 }
 
 function createOrUpdateSuperAdminRole() {
