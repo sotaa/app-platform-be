@@ -4,13 +4,13 @@ import { v1 } from 'uuid';
 import { IInvoiceOwner, IInvoice } from '../../../payments';
 import { IGuardUser, IRole } from '../../../guard';
 
-export class User implements IUser, IInvoiceOwner{
+export class User implements IUser, IInvoiceOwner {
   role: IRole;
   id: string;
   firstName?: string;
   lastName?: string;
   email: string;
-  sex?: 'male' | 'female';
+  gender?: 'male' | 'female';
   mobile?: string;
   expireDate?: Date;
   registerDate?: Date;
@@ -30,7 +30,7 @@ export class User implements IUser, IInvoiceOwner{
   static create(userDTO: IUserDTO) {
     const user = new this(userDTO.email, userDTO.id);
     user.expireDate = new Date(userDTO.expireDate);
-    user.sex = userDTO.sex;
+    user.gender = userDTO.gender;
     user.invoices = userDTO.invoices;
     user.lastName = userDTO.lastName;
     user.firstName = userDTO.firstName;

@@ -7,46 +7,46 @@ export const UserEntity = new EntitySchema<User>({
     id: {
       type: String,
       primary: true,
-      default: 'uuid_generate_v4()' ,
+      default: 'uuid_generate_v4()',
       unique: true
     },
     email: {
-        type: String,
-        nullable: false
+      type: String,
+      nullable: false
     },
     expireDate: {
-        type: 'date'
+      type: 'date'
     },
     firstName: {
-        type: String,
-        nullable: true
+      type: String,
+      nullable: true
     },
     lastName: {
-        type: String,
-        nullable: true
+      type: String,
+      nullable: true
     },
     mobile: {
-        type: String,
-        nullable: true
+      type: String,
+      nullable: true
     },
     registerDate: {
-        type: Date,
-        default: () => 'CURRENT_TIMESTAMP'
+      type: Date,
+      default: () => 'CURRENT_TIMESTAMP'
     },
-    sex: {
-        type: String,
-        default: 'MALE'
+    gender: {
+      type: String,
+      default: 'MALE'
     }
   },
   relations: {
-      invoices: {
-          type: 'one-to-many',
-          target: 'invoice',
-          inverseSide: 'user'
-      },
-      role: {
-          type: 'many-to-one',
-          target: 'role'
-      }
+    invoices: {
+      type: 'one-to-many',
+      target: 'invoice',
+      inverseSide: 'user'
+    },
+    role: {
+      type: 'many-to-one',
+      target: 'role'
+    }
   }
 });

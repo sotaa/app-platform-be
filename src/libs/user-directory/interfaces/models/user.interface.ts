@@ -10,11 +10,11 @@ export interface IUserDTO {
   firstName?: string;
   lastName?: string;
   email: string;
-  sex?: 'male' | 'female';
+  gender?: 'male' | 'female';
   mobile?: string;
   expireDate?: Date;
   registerDate?: Date;
   invoices?: IInvoice[];
 }
 
-export interface IUser extends IUserBO , IUserDTO, IGuardUser {}
+export interface IUser extends IUserBO, IUserDTO, IGuardUser {}
