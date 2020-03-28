@@ -9,7 +9,7 @@ export function allow(guardService: IGuardService, claims?: string[]) {
     if (guardService.hasPermissions(req.user, claims)) {
       next();
     } else {
-      res.setStatus(403).send(new Error('Forbidden'));
+      res.status(403).send({ message: 'Forbidden' });
     }
   };
 }
