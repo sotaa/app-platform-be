@@ -28,7 +28,7 @@ class UserDirectoryRouter {
     this.router.use('/payment', paymentRouter(iocContainer.get(PaymentController), this.logger));
     this.router.use('/payment-plans', paymentPlanRouter(iocContainer.get(PaymentPlansController), this.logger));
     this.router.use('/roles', roleRouter(iocContainer.get(RoleController), this.logger));
-    this.router.use('/user', userRouter(iocContainer.get(UserController), this.logger));
+    this.router.use('/users', userRouter(iocContainer.get(UserController), this.logger));
   }
 }
 
