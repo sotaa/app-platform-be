@@ -9,6 +9,9 @@ export const PAYMENT_PLAN_DELETE = 'PAYMENT_PLAN_DELETE';
 export const PAYMENT_PLAN_EDIT = 'PAYMENT_PLAN_EDIT';
 
 export const USER_CREATE = 'USER_CREATE';
+export const USER_READ = 'USER_READ';
+export const USER_DELETE = 'USER_DELETE';
+export const USER_EDIT = 'USER_EDIT';
 
 export const ROLE_CREATE = 'ROLE_CREATE';
 export const ROLE_READ = 'ROLE_READ';

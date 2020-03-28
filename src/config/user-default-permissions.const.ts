@@ -1,0 +1,7 @@
+
+export const APPLICATION_READ = 'APPLICATION_READ';
+
+export const PAYMENT_PLAN_READ = 'PAYMENT_PLAN_READ';
+
+
+
