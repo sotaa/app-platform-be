@@ -212,7 +212,7 @@
 				"email": {
 					"type": "string"
 				},
-				"sex": {
+				"gender": {
 					"type": "string",
 					"enum": [
 						"male",
