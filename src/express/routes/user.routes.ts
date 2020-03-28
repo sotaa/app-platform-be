@@ -11,21 +11,42 @@ class UserRouter {
   }
 
   assign(router: Router) {
-    router.post('/', this.routeToCreate.bind(this));
+    router.put('/:id', this.routeToUpdate.bind(this));
+    router.get('/', this.routeToFind.bind(this));
+    router.get('/:id', this.routeToFindById.bind(this));
   }
 
-  private async routeToCreate(req: Request, res: Response) {
+  private async routeToUpdate(req: Request, res: Response) {
     try {
-        const result = await this.controller.create(req.body, req);
-        res.json(result);
+      const result = await this.controller.update(req.params.id, req.body, (req as any).user);
+      res.json(result);
     } catch (e) {
-        this.logger.error(e);
-        res.status(BAD_REQUEST).send(e);
+      this.logger.error(e);
+      res.status(BAD_REQUEST).send(e);
+    }
+  }
+
+  private async routeToFind(req: Request, res: Response) {
+    try {
+      const result = await this.controller.getAll(req.query);
+      res.json(result);
+    } catch (e) {
+      this.logger.error(e);
+      res.status(BAD_REQUEST).send(e);
+    }
+  }
+  private async routeToFindById(req: Request, res: Response) {
+    const id = req.params.id;
+    try {
+      const result = await this.controller.get(id);
+      res.json(result);
+    } catch (e) {
+      this.logger.error(e);
+      res.status(BAD_REQUEST).send(e);
     }
   }
 }
 
-const userRouter = (controller: UserController, logger: ILogger = console) =>
-  new UserRouter(controller, logger).router;
+const userRouter = (controller: UserController, logger: ILogger = console) => new UserRouter(controller, logger).router;
 
 export { userRouter };
