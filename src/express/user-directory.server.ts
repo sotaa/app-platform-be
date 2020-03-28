@@ -7,9 +7,10 @@ import * as swaggerUi from 'swagger-ui-express';
 import { DBConfiguration, initializeDatabase, clean } from '../services';
 import { ILogger } from '../logger';
 import { logMiddleware, createAuthMiddleware } from './middlewares';
+import { userProfile } from './middlewares/userProfile.middleware';
 import { iocContainer, TYPES } from '../ioc';
 import { IIdentityConfig } from '../libs/identity/interfaces';
-import { AUTHENTICATED_ROUTES } from './routes/authenticated-routes.const';
+import { AUTHENTICATED_ROUTES, USER_PROFILE_ROUTES } from './routes/authenticated-routes.const';
 import { secure, IRouteConfig } from '../libs/guard/express';
 import { seedDB } from '../services/bootstrap/seeder';
 import * as cors from 'cors';
@@ -27,7 +28,7 @@ export class UserDirectoryServer {
     this.app.use(express.json());
     this.handleUncaughtExceptions();
     this.secure(AUTHENTICATED_ROUTES);
-    this.app.use(userDirectoryRouter(this.logger))
+    this.app.use(userDirectoryRouter(this.logger));
   }
 
   /**
@@ -55,7 +56,7 @@ export class UserDirectoryServer {
    * @param values default values.
    */
   public seedDatabase(values: any) {
-   return seedDB(values);
+    return seedDB(values);
   }
 
   public enableDocumentation(url: string) {
@@ -78,6 +79,9 @@ export class UserDirectoryServer {
     for (let route of routes) {
       this.app.use(route.path, authMiddleware);
     }
+    this.app.get('/users/:id', userProfile);
+    this.app.put('/users/:id', userProfile);
+
     secure(this.app, routes, iocContainer.get(TYPES.IGuardService));
   }
 
