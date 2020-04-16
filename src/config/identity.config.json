@@ -1,6 +1,6 @@
 {
-  "tokenLife": 3600,
-  "secretKey": "secret_key",
+  "tokenLife": 150000000,
+  "secretKey": "this-is-jwt-secret-key-of-the-project-532kjbfd60)@_y89dfsbm,-30203@sk4%%%%^",
   "validations": {
     "authData": {
       "password": {
