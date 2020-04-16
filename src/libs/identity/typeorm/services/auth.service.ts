@@ -11,10 +11,10 @@ export class AuthService implements IAuthService {
     protected manager: EntityManager,
     protected tokenManager: ITokenManager,
     protected config: IIdentityConfig
-  ) { }
+  ) {}
 
   async register(authData: IAuthData): Promise<IAuthResult> {
-    const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator(), username =>
+    const validator = new AuthDataValidator(this.config.validations.authData, new RegexValidator(), (username) =>
       this.manager.findOne<IdentityUser>('identity_user', { username })
     );
     const validationResult = await validator.validate(authData);
@@ -27,7 +27,7 @@ export class AuthService implements IAuthService {
     let user = new IdentityUser(authData.username, hashedPassword);
     let result;
 
-    await this.manager.transaction(async transactionEntityManager => {
+    await this.manager.transaction(async (transactionEntityManager) => {
       await this.manager.save('identity_user', user);
       result = this.generateAuthResult(user);
       await this.saveUserTokens(user, result, transactionEntityManager);
@@ -37,7 +37,7 @@ export class AuthService implements IAuthService {
 
   async login(authData: IAuthData): Promise<IAuthResult> {
     let _user = await this.manager.findOne<IdentityUser>('identity_user', {
-      username: authData.username
+      username: authData.username,
     });
     if (!_user) {
       throw new UserNameNotFoundError();
@@ -51,7 +51,7 @@ export class AuthService implements IAuthService {
 
     const result = this.generateAuthResult(_user);
 
-    this.manager.transaction(async transactionManager => {
+    this.manager.transaction(async (transactionManager) => {
       await this.saveUserTokens(_user, result, transactionManager);
     });
 
@@ -64,15 +64,18 @@ export class AuthService implements IAuthService {
   }
 
   async renewToken(refreshToken: string): Promise<ITokenPair> {
-    let data;
+    let data: any;
     try {
       data = this.tokenManager.extract(refreshToken, this.config.secretKey);
     } catch (e) {
       throw new InvalidTokenError();
     }
+    data.randomSalt = new Date().getTime();
     const result = this.generateTokenPair(data);
 
-    await this.saveUserTokens(data.user, result);
+    this.manager.transaction(async (transactionManager) => {
+      await this.saveUserTokens(data.user, result, transactionManager);
+    });
     return result;
   }
 
@@ -106,7 +109,7 @@ export class AuthService implements IAuthService {
   private generateTokenPair(payload: any): ITokenPair {
     return {
       token: this.tokenManager.generate(payload, this.config.secretKey, this.config.tokenLife),
-      refreshToken: this.tokenManager.generate(payload, this.config.secretKey)
+      refreshToken: this.tokenManager.generate(payload, this.config.secretKey),
     };
   }
 }
