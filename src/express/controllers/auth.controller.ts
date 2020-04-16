@@ -22,16 +22,24 @@ export class AuthController {
 
     await this.userService.create(user);
 
-    authResult = await this.authService.addCustomPayloadToAuthResult(authResult, { role: user.role });
+    authResult = await this.authService.addCustomPayloadToAuthResult(authResult, {
+      role: user.role,
+      expireDate: user.expireDate,
+    });
     authResult.user.role = user.role;
+    authResult.user.expireDate = user.expireDate;
     return authResult;
   }
 
   public async login(authData: IAuthData): Promise<IAuthResult> {
     let authResult = await this.authService.login(authData);
     const user = await this.userService.findById(authResult.user.id);
-    authResult = await this.authService.addCustomPayloadToAuthResult(authResult, { role: user.role });
+    authResult = await this.authService.addCustomPayloadToAuthResult(authResult, {
+      role: user.role,
+      expireDate: user.expireDate,
+    });
     authResult.user.role = user.role;
+    authResult.user.expireDate = user.expireDate;
     return authResult;
   }
 
